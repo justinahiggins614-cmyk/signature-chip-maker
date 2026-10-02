@@ -8,6 +8,7 @@
 <link rel="canonical" href="https://justinahiggins614-cmyk.github.io/signature-chip-maker/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"The Signature Computer Chip Maker and Archive","url":"https://justinahiggins614-cmyk.github.io/signature-chip-maker/","description":"Original Signature-line computer chip designs: full plans, circuit-board images and specs for every chip type, marching to 1,000,000 designs."}</script>
 <script src="engine.js"></script>
+<script src="js/jah-talk-fallback.js"></script>
 <style>
 :root{--navy:#0a1628;--navy2:#0d2036;--panel:#12294a;--copper:#d08a3e;--gold:#e8b34b;--cyan:#4fd8e8;--ink:#cfe8ff;--dim:#7fa8c9;}
 *{box-sizing:border-box}
@@ -140,7 +141,7 @@ async function openChip(id){
  h+='<h3 style="color:var(--gold)">Completed circuit board — '+esc(c.sigpart)+'</h3>';
  h+='<div class="boardwrap">'+E.boardSVG(c)+'</div>';
  h+='<ol class="seclist">'+c.blocks.map(b=>'<li><b>'+b.n+' · '+esc(b.name)+'</b> — '+esc(b.desc)+'</li>').join("")+'</ol>';
- h+='<div id="qa"><div style="color:var(--cyan);font-weight:bold">🤖 AI HELPER — ask about this design</div><div id="qalog"></div><input id="qain" placeholder="e.g. what process node is it? how much power does it use?" aria-label="Ask about this design" onkeydown="if(event.key===\'Enter\')QA.ask()"></div>';
+ h+='<div id="qa"><div style="color:var(--cyan);font-weight:bold">🤖 AI HELPER — ask about this design</div><div id="qalog"><div class="a">'+esc(chipGreet(c))+'</div></div><input id="qain" placeholder="e.g. what process node is it? how much power does it use?" aria-label="Ask about this design" onkeydown="if(event.key===\'Enter\')QA.ask()"></div>';
  h+='<div class="xlink">🔗 <b>Related elsewhere on the network:</b> <a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/?q='+pcQ+'">find systems using this chip class in the PC Depository →</a> · <a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">print this board as a keepsake emblem in the 3D Print Depository →</a></div>';
  v.innerHTML=h;
  window._chip=c;
@@ -182,9 +183,33 @@ function rdSpeak(text){if(RD.playing&&!RD.stopped){rdStop();return;}rdStop();RD.
 var TTS={readChip:function(){var c=window._chip;if(!c)return;rdSpeak(c.name+". "+c.label+", "+c.era+" era. "+c.arch+" Process node "+c.node+", "+c.transistors+" transistors, "+c.tdp+" watts. "+c.mfg);},
 stop:rdStop,pause:function(){if(RD.audio)RD.audio.pause();},resume:function(){if(RD.audio)RD.audio.play().catch(function(){});}};
 /* ---------- data-grounded Q&A ---------- */
+/* JAHtalk conversational wiring (shared module: js/jah-talk-fallback.js).
+   The Chip Helper is a generic site helper — it claims NO canon JAH-AI ID.
+   JAHtalk.reply() talks human as the fallback under the grounded matcher;
+   JAHtalk.guard() scrubs every final reply; JAHtalk.greet() auto-greets. */
+function chipTalk(){return (typeof JAHtalk!=="undefined")?JAHtalk:null;}
+function chipProfile(c){return{name:"Chip Helper",
+ description:"I help you understand this chip design — its process, power, pins, transistors, clock, materials, board sections and lineage.",
+ abilities:["Explain the chip's architecture and specs in plain words",
+  "Answer about process node, transistors, die size and clock speed",
+  "Explain power envelope, package, materials and board sections",
+  "Describe the design's lineage in plain language"],
+ domain:(c?c.name:"chip design")+" — this design's own spec sheet",kind:"helper"};}
+function chipIsSmallTalk(q){var t=String(q||"").toLowerCase();
+ return /^(hi|hii+|hey|hello|yo|howdy|good\s?(morning|afternoon|evening|day)|greetings|sup|hiya)\b/.test(t)
+  ||/who are you|your name|introduce yourself|about yourself/.test(t)
+  ||/what are your duties|what is your duty|what do you do|what can you do|your duties|your job|your role|your abilities|your capabilities|explain your duties|what are you for/.test(t)
+  ||(/\bduties\b/.test(t)&&t.length<30)
+  ||/thank/.test(t)||/^(bye|goodbye|good ?night|see you|later|gtg)\b/.test(t)
+  ||/how are you|how's it going|how do you feel/.test(t);}
+function chipGreet(c){var JT=chipTalk();if(JT){try{return JT.greet(chipProfile(c));}catch(e){}}
+ return "Ask me about this design — process node, power, pins, transistors, clock, materials, board sections, or lineage.";}
 var QA={ask:function(){const inp=document.getElementById("qain");const q=inp.value.trim();if(!q)return;inp.value="";const c=window._chip;
- const log=document.getElementById("qalog");log.insertAdjacentHTML("beforeend",'<div class="q">You: '+esc(q)+'</div><div class="a">'+esc(QA.answer(c,q))+'</div>');log.scrollTop=log.scrollHeight;},
-answer:function(c,q){q=q.toLowerCase();
+ const log=document.getElementById("qalog");log.insertAdjacentHTML("beforeend",'<div class="q">You: '+esc(q)+'</div><div class="a">'+esc(QA.say(c,q))+'</div>');log.scrollTop=log.scrollHeight;},
+say:function(c,q){var prof=chipProfile(c),JT=chipTalk(),raw;
+ if(JT&&chipIsSmallTalk(q)){raw=JT.reply(prof,q);}else{raw=QA.answerRaw(c,q);}
+ return JT?JT.guard(raw,prof):raw;},
+answerRaw:function(c,q){q=q.toLowerCase();
  const has=(...ws)=>ws.some(w=>q.includes(w));
  if(has("node","process","nanometer","nm","lithograph"))return "It is built on a "+c.node+" process ("+c.sub+").";
  if(has("power","watt","tdp","heat","thermal"))return "Its power envelope is "+c.tdp+" W TDP. The board's S6 thermal dissipation plane moves that heat to the spreader.";
