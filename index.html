@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Signature Computer Chip Maker and Archive — 1,000,000 Chip Designs</title>
+<meta name="description" content="The Signature Computer Chip Maker and Archive: original Signature-line chip designs for every chip type ever made or projected — CPUs, GPUs, AI accelerators, SoCs, microcontrollers, FPGAs, quantum control and more. Deterministic generator marching to 1,000,000 designs.">
+<link rel="canonical" href="https://justinahiggins614-cmyk.github.io/signature-chip-maker/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"The Signature Computer Chip Maker and Archive","url":"https://justinahiggins614-cmyk.github.io/signature-chip-maker/","description":"Original Signature-line computer chip designs: full plans, circuit-board images and specs for every chip type, marching to 1,000,000 designs."}</script>
+<script src="engine.js"></script>
+<style>
+:root{--navy:#0a1628;--navy2:#0d2036;--panel:#12294a;--copper:#d08a3e;--gold:#e8b34b;--cyan:#4fd8e8;--ink:#cfe8ff;--dim:#7fa8c9;}
+*{box-sizing:border-box}
+body{background:var(--navy);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;margin:0;line-height:1.5}
+a{color:var(--cyan)}
+header.brand{background:linear-gradient(180deg,#0d2036,#0a1628);border-bottom:3px solid var(--copper);padding:18px 14px;text-align:center}
+header.brand h1{margin:0;color:var(--gold);font-size:clamp(20px,4.5vw,34px);letter-spacing:1px}
+header.brand p{margin:6px 0;color:var(--dim)}
+.countchip{display:inline-block;background:var(--panel);border:2px solid var(--copper);border-radius:20px;padding:6px 18px;margin-top:8px;color:var(--gold);font-weight:bold}
+nav.jahnet{background:#081426;border-bottom:2px solid var(--copper);padding:8px 6px;text-align:center;font-size:12.5px}
+nav.jahnet a{color:var(--ink);text-decoration:none;margin:2px 7px;display:inline-block}
+nav.jahnet a:hover{color:var(--gold)}
+nav.jahnet .here{color:#0a1628;background:var(--gold);border-radius:10px;padding:1px 8px;font-weight:bold}
+nav.jahnet .soon{opacity:.55;font-style:italic}
+nav.jahnet .soonpill{font-size:10px;background:#3a2a12;color:var(--gold);border-radius:8px;padding:0 6px;margin-left:3px}
+#finderbar{background:var(--panel);border:2px solid var(--cyan);border-radius:12px;margin:14px auto;max-width:860px;padding:12px}
+#finderbar .frow{display:flex;gap:8px}
+#finderbar input{flex:1;background:#0a1628;border:1px solid var(--cyan);color:var(--ink);border-radius:8px;padding:10px;font-size:15px;font-family:inherit}
+#finderbar button{background:var(--cyan);color:#0a1628;border:0;border-radius:8px;padding:10px 16px;font-weight:bold;cursor:pointer;font-family:inherit}
+#finderres{margin-top:10px}
+.fcard{background:#0a1628;border:1px solid var(--copper);border-radius:8px;padding:8px 10px;margin:6px 0}
+.fcard b{color:var(--gold)}
+.fcard a.takeme{float:right;color:var(--cyan);font-weight:bold}
+.azrow{text-align:center;margin:10px 4px}
+.azrow a,.azrow button{color:var(--cyan);margin:2px 4px;text-decoration:none;background:none;border:1px solid #1d3a5f;border-radius:6px;padding:3px 9px;cursor:pointer;font-family:inherit;font-size:14px}
+.azrow a.on,.azrow button.on{background:var(--copper);color:#0a1628;font-weight:bold}
+main{max-width:1080px;margin:0 auto;padding:10px 12px 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid #2a4a73;border-radius:10px;padding:12px;cursor:pointer}
+.card:hover{border-color:var(--copper)}
+.card h3{margin:0 0 4px;color:var(--gold);font-size:15px}
+.card .meta{color:var(--dim);font-size:12px}
+.card .famtag{display:inline-block;background:#0a1628;border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;font-size:11px;padding:1px 8px;margin-bottom:6px}
+#chipview{background:var(--navy2);border:2px solid var(--copper);border-radius:14px;padding:16px;margin-top:8px}
+#chipview h2{color:var(--gold);margin:4px 0}
+.spectable{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+.spectable td{border-bottom:1px solid #1d3a5f;padding:6px 8px;vertical-align:top}
+.spectable td.k{color:var(--cyan);width:200px}
+.boardwrap{background:#081426;border:1px solid var(--copper);border-radius:10px;padding:8px;margin:12px 0}
+.boardwrap svg{width:100%;height:auto;display:block}
+.seclist{margin:8px 0}
+.seclist li{margin:6px 0;font-size:13.5px}
+.seclist b{color:var(--gold)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.toolbar button{background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:9px 14px;cursor:pointer;font-family:inherit;font-size:14px}
+.toolbar button:hover{background:var(--copper);color:#0a1628}
+#ttsbar{position:fixed;bottom:0;left:0;right:0;background:#081426;border-top:2px solid var(--copper);padding:8px 12px;display:none;z-index:50;text-align:center}
+#ttsbar button{margin:0 6px;background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:6px 12px;cursor:pointer;font-family:inherit}
+#qa{background:#0a1628;border:1px solid var(--cyan);border-radius:10px;padding:12px;margin:14px 0}
+#qa .q{color:var(--cyan);margin:8px 0 2px;font-weight:bold}
+#qa .a{margin:0 0 10px}
+#qa input{width:100%;background:var(--navy2);border:1px solid var(--cyan);color:var(--ink);border-radius:8px;padding:9px;font-family:inherit;margin-top:8px}
+.xlink{background:var(--panel);border:1px dashed var(--copper);border-radius:10px;padding:10px;margin:12px 0;font-size:13.5px}
+.backlink{display:inline-block;margin:10px 0;color:var(--cyan);cursor:pointer}
+footer{border-top:2px solid var(--copper);padding:16px;text-align:center;color:var(--dim);font-size:12.5px}
+.staticcount{color:var(--dim);font-size:13px;text-align:center;margin:8px}
+</style>
+</head>
+<body>
+<header class="brand">
+<h1>⚙ THE SIGNATURE COMPUTER CHIP MAKER AND ARCHIVE</h1>
+<p>Original Signature-line chip designs — every chip type ever made or projected, fully planned, drawn and specified.</p>
+<div class="countchip"><span id="livecount">…</span> / 1,000,000 DESIGNS</div>
+</header>
+<nav class="jahnet" aria-label="THE JAH NETWORK">
+<a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">1 Phone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">2 Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">3 Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">4 JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">5 JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">6 Patents</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">7 Specs</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">8 Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">9 PC Depot</a><a href="https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/">10 Mega-Mall</a><a href="https://justinahiggins614-cmyk.github.io/signature-university/">11 University</a><a href="https://justinahiggins614-cmyk.github.io/signature-books/">12 Books</a><a href="https://justinahiggins614-cmyk.github.io/signature-comics/">13 Comics</a><a href="https://justinahiggins614-cmyk.github.io/signature-newspapers/">14 News</a><a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">15 3D Print</a><a href="https://justinahiggins614-cmyk.github.io/signature-backend/">16 Backend</a><a href="https://justinahiggins614-cmyk.github.io/signature-boundless-generators/">17 Generators</a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/">18 Mix Lab<span class="soonpill">SOON</span></a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-olypics/">19 AI Olypics<span class="soonpill">SOON</span></a><span class="here">20 Chip Maker — YOU ARE HERE</span><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-app-archive/">21 App Archive<span class="soonpill">SOON</span></a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/">22 Robot Matcher<span class="soonpill">SOON</span></a>
+</nav>
+<main>
+<div id="finderbar">
+<div style="color:var(--cyan);font-weight:bold;margin-bottom:6px">🔎 CHIP FINDER — describe the chip you need…</div>
+<div class="frow"><input id="finderq" placeholder="e.g. low power sensor chip for a wearable" aria-label="Describe the chip you need"><button onclick="Finder.ask()">Find it</button></div>
+<div id="finderres" aria-live="polite"></div>
+</div>
+<div class="azrow" id="famrow" aria-label="Filter by chip family"></div>
+<div class="azrow" id="azrow" aria-label="A to Z"></div>
+<p class="staticcount">1,600 original Signature chip designs archived as of 2026-10-02 — the live counter above keeps growing.</p>
+<div id="home"><div class="grid" id="grid"></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button></div></div>
+<div id="chipview" style="display:none"></div>
+</main>
+<div id="ttsbar"><span id="ttstext" style="color:var(--dim);font-size:12px"></span><br>
+<button onclick="TTS.stop()">⏹ Stop</button><button onclick="TTS.pause()">⏸ Pause</button><button onclick="TTS.resume()">▶ Resume</button></div>
+<footer>
+THE JAH NETWORK · The Signature Computer Chip Maker and Archive · all designs are original Signature-line works — no real manufacturer branding or part numbers.<br>
+<a href="api.json">api.json</a> · <a href="sitemap.xml">sitemap.xml</a> · <a href="robots.txt">robots.txt</a>
+</footer>
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+async function gz(url){const r=await fetch(url);if(!r.ok)throw new Error("fetch "+r.status);const ab=await r.arrayBuffer();const ds=new DecompressionStream("gzip");const s=await new Response(new Blob([ab]).stream().pipeThrough(ds)).text();return s;}
+function qp(n){return new URLSearchParams(location.search).get(n);}
+var DB={rows:[],byId:{},total:1600};
+async function loadIndex(){const t=await gz("data/index/chips.search.json.gz");const rows=t.trim().split("\n").map(l=>JSON.parse(l));DB.rows=rows;rows.forEach(r=>DB.byId[r[0]]=r);DB.total=rows.length;document.getElementById("livecount").textContent=DB.total.toLocaleString("en-US");}
+async function loadRow(id){const n=parseInt(id.split("-")[2],10);const c=String(Math.floor((n-1)/200)+1).padStart(5,"0");const t=await gz("data/chunks/c"+c+".json.gz");for(const l of t.trim().split("\n")){const r=JSON.parse(l);if(r.id===id)return r;}return null;}
+/* ---------- home grid ---------- */
+var UI={shown:0,filter:null,letter:null,
+init:function(){const fr=document.getElementById("famrow");const E=window.ChipEngine;
+ fr.innerHTML='<button data-f="" class="on" onclick="UI.setFam(\'\')">All</button>'+E.FAMS.map(f=>'<button data-f="'+f+'" onclick="UI.setFam(\''+f+'\')">'+esc(E.FAMDEF[f].label.replace("Signature ",""))+'</button>').join("");
+ const az=document.getElementById("azrow");let h='<a href="#" data-l="" class="on" onclick="UI.setLetter(\'\');return false">All</a>';
+ for(let i=65;i<=90;i++){const L=String.fromCharCode(i);h+='<a href="#" data-l="'+L+'" onclick="UI.setLetter(\''+L+'\');return false">'+L+'</a>';}
+ az.innerHTML=h;UI.more();},
+setFam:function(f){UI.filter=f||null;UI.shown=0;document.querySelectorAll("#famrow button").forEach(b=>b.classList.toggle("on",b.dataset.f===(f||"")));UI.render(true);},
+setLetter:function(l){UI.letter=l||null;UI.shown=0;document.querySelectorAll("#azrow a").forEach(a=>a.classList.toggle("on",a.dataset.l===(l||"")));UI.render(true);},
+rows:function(){return DB.rows.filter(r=>(!UI.filter||r[2]===UI.filter)&&(!UI.letter||r[1].toUpperCase().indexOf("SIGNATURE "+UI.letter)===0));},
+render:function(reset){const rs=UI.rows();if(reset){UI.shown=0;document.getElementById("grid").innerHTML="";}
+ const g=document.getElementById("grid");const E=window.ChipEngine;
+ const slice=rs.slice(UI.shown,UI.shown+48);UI.shown+=slice.length;
+ g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div></div>').join(""));
+ document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";},
+more:function(){UI.render(false);},
+open:function(id){location.search="?chip="+id;}
+};
+/* ---------- chip detail ---------- */
+async function openChip(id){
+ document.getElementById("home").style.display="none";
+ const v=document.getElementById("chipview");v.style.display="block";
+ v.innerHTML='<p style="color:var(--dim)">Loading '+esc(id)+'…</p>';
+ const row=await loadRow(id);
+ if(!row){v.innerHTML='<span class="backlink" onclick="location.search=\'\'">← back</span><p>Design not found.</p>';return;}
+ const E=window.ChipEngine, c=E.renderChip(row);
+ const F=E.FAMDEF[row.fam];
+ const pcQ=encodeURIComponent(row.name.replace(/^Signature /,"").split(" ")[0]+" chip");
+ let h='<span class="backlink" onclick="location.search=\'\'">← back to archive</span>';
+ h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era · Signature part '+esc(c.sigpart)+'</div>';
+ h+='<div class="toolbar"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button></div>';
+ h+='<table class="spectable">';
+ const rows=[["Architecture",c.arch],["Process node",c.node+" — "+c.sub],["Transistors",E.fmt(c.transistors)],["Die size",c.die+" mm²"],["Package",c.pkg+" · "+c.pins+" pins"],["Clock",c.clk+" GHz"],[F.unitLabel||c.unit,c.units], ["Power envelope",c.tdp+" W TDP"],["Instruction set",c.isa],["Interconnect",c.metal],["Dielectric",c.diel],["Manufacturing",c.mfg],["Lineage",c.lineage]];
+ rows.forEach(x=>{h+='<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1])+'</td></tr>';});
+ h+='</table>';
+ h+='<h3 style="color:var(--gold)">Completed circuit board — '+esc(c.sigpart)+'</h3>';
+ h+='<div class="boardwrap">'+E.boardSVG(c)+'</div>';
+ h+='<ol class="seclist">'+c.blocks.map(b=>'<li><b>'+b.n+' · '+esc(b.name)+'</b> — '+esc(b.desc)+'</li>').join("")+'</ol>';
+ h+='<div id="qa"><div style="color:var(--cyan);font-weight:bold">🤖 AI HELPER — ask about this design</div><div id="qalog"></div><input id="qain" placeholder="e.g. what process node is it? how much power does it use?" aria-label="Ask about this design" onkeydown="if(event.key===\'Enter\')QA.ask()"></div>';
+ h+='<div class="xlink">🔗 <b>Related elsewhere on the network:</b> <a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/?q='+pcQ+'">find systems using this chip class in the PC Depository →</a> · <a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">print this board as a keepsake emblem in the 3D Print Depository →</a></div>';
+ v.innerHTML=h;
+ window._chip=c;
+ // per-record JSON-LD
+ const ld={"@context":"https://schema.org","@type":"TechArticle","headline":c.name+" — "+c.label+" design "+c.id,"description":c.arch,"identifier":c.id};
+ const s=document.createElement("script");s.type="application/ld+json";s.textContent=JSON.stringify(ld);document.head.appendChild(s);
+ document.title=c.name+" — The Signature Computer Chip Maker and Archive";
+}
+UI.copyChip=function(){const c=window._chip;if(!c)return;const t=chipText(c);navigator.clipboard.writeText(t).then(()=>alert("Spec copied."),()=>alert("Copy blocked by browser."));};
+UI.dlTxt=function(){const c=window._chip;if(!c)return;dl(c.id+".txt",chipText(c),"text/plain");};
+UI.dlJson=function(){const c=window._chip;if(!c)return;dl(c.id+".json",JSON.stringify(c,null,1),"application/json");};
+function dl(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();}
+function chipText(c){let t=c.name+" ("+c.id+")\n"+c.label+" · "+c.era+" era · "+c.sigpart+"\n\nARCHITECTURE\n"+c.arch+"\n\nSPEC\nProcess: "+c.node+"\nTransistors: "+c.transistors+"\nDie: "+c.die+" mm²\nPackage: "+c.pkg+" ("+c.pins+" pins)\nClock: "+c.clk+" GHz\n"+c.unit+": "+c.units+"\nTDP: "+c.tdp+" W\nISA: "+c.isa+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n";return t;}
+/* ---------- tiered TTS: ResponsiveVoice audio -> 2x Google TTS, audio-element playback ---------- */
+var RD={audio:null,queue:[],playing:false,stopped:true,timer:null,total:0};
+var RD_TIERS=[
+ function(t){return "https://code.responsivevoice.org/getvoice.php?t="+encodeURIComponent(t)+"&tl=en-US&sv=g2&vn=&pitch=0.5&rate=0.95";},
+ function(t){return "https://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(t)+"&tl=en&client=tw-ob";},
+ function(t){return "https://translate.googleapis.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(t)+"&tl=en&client=tw-ob";}];
+function rdChunks(t){t=String(t).replace(/\s+/g," ").trim();var out=[],cur="";
+ t.split(/(?<=[.!?])\s+/).forEach(function(s){if((cur+" "+s).length>170){if(cur)out.push(cur);cur=s;}else cur=(cur?cur+" ":"")+s;});
+ if(cur)out.push(cur);return out.slice(0,400);}
+function rdStop(){RD.stopped=true;RD.playing=false;RD.queue=[];if(RD.timer){clearTimeout(RD.timer);RD.timer=null;}if(RD.audio){try{RD.audio.pause();}catch(e){}RD.audio=null;}document.getElementById("ttsbar").style.display="none";}
+function rdPlayTier(chunk,tier,done){
+ if(tier>=RD_TIERS.length){done(false);return;}
+ var url=RD_TIERS[tier](chunk),a=new Audio();RD.audio=a;var finished=false;
+ function next(ok){if(finished)return;finished=true;if(RD.timer){clearTimeout(RD.timer);RD.timer=null;}try{a.pause();}catch(e){}done(ok);}
+ a.onended=function(){next(true);};a.onerror=function(){next(false);};
+ RD.timer=setTimeout(function(){rdPlayTier(chunk,tier+1,done);},12000);
+ a.src=url;var p=a.play();if(p&&p.catch)p.catch(function(){next(false);});
+}
+function rdNext(){
+ if(RD.stopped||!RD.queue.length){rdStop();return;}
+ RD.playing=true;var chunk=RD.queue.shift(),tier=0;
+ document.getElementById("ttstext").textContent="Reading chunk "+(RD.total-RD.queue.length)+" of "+RD.total+"…";
+ (function attempt(){if(RD.stopped)return;rdPlayTier(chunk,tier,function(ok){if(RD.stopped)return;if(ok){setTimeout(rdNext,250);}else{tier++;if(tier<RD_TIERS.length)attempt();else setTimeout(rdNext,250);}});})();
+}
+function rdSpeak(text){if(RD.playing&&!RD.stopped){rdStop();return;}rdStop();RD.queue=rdChunks(text);RD.total=RD.queue.length;if(!RD.queue.length)return;RD.stopped=false;document.getElementById("ttsbar").style.display="block";rdNext();}
+var TTS={readChip:function(){var c=window._chip;if(!c)return;rdSpeak(c.name+". "+c.label+", "+c.era+" era. "+c.arch+" Process node "+c.node+", "+c.transistors+" transistors, "+c.tdp+" watts. "+c.mfg);},
+stop:rdStop,pause:function(){if(RD.audio)RD.audio.pause();},resume:function(){if(RD.audio)RD.audio.play().catch(function(){});}};
+/* ---------- data-grounded Q&A ---------- */
+var QA={ask:function(){const inp=document.getElementById("qain");const q=inp.value.trim();if(!q)return;inp.value="";const c=window._chip;
+ const log=document.getElementById("qalog");log.insertAdjacentHTML("beforeend",'<div class="q">You: '+esc(q)+'</div><div class="a">'+esc(QA.answer(c,q))+'</div>');log.scrollTop=log.scrollHeight;},
+answer:function(c,q){q=q.toLowerCase();
+ const has=(...ws)=>ws.some(w=>q.includes(w));
+ if(has("node","process","nanometer","nm","lithograph"))return "It is built on a "+c.node+" process ("+c.sub+").";
+ if(has("power","watt","tdp","heat","thermal"))return "Its power envelope is "+c.tdp+" W TDP. The board's S6 thermal dissipation plane moves that heat to the spreader.";
+ if(has("pin","package","bga"))return "It ships in a "+c.pkg+" package with "+c.pins+" pins.";
+ if(has("transistor"))return "It integrates "+c.transistors.toLocaleString("en-US")+" transistors on a "+c.die+" mm² die.";
+ if(has("clock","ghz","speed","mhz"))return "It clocks up to "+c.clk+" GHz, distributed by the S5 clock and timing tree.";
+ if(has("size","die","mm"))return "The die is "+c.die+" mm².";
+ if(has("material","silicon","copper","substrate"))return "Substrate: "+c.sub+". Interconnect: "+c.metal+". Dielectric: "+c.diel+".";
+ if(has("isa","instruction"))return c.isa+".";
+ if(has("board","section","layout","svg"))return "The board has 8 labeled sections: "+c.blocks.map(b=>b.n+" "+b.name).join(", ")+". Each is described under the board image.";
+ if(has("security","secure"))return "The S7 security enclave holds the root of trust: secure boot, key storage and crypto accelerators, fenced from the main cores.";
+ if(has("made","real","intel","amd","nvidia","manufacturer"))return "This is a Signature-line original design — no real manufacturer's branding, part numbers, or datasheet text are used. "+c.lineage;
+ if(has("what is","about","describe","summary"))return c.arch;
+ if(has("use","for what","purpose","application"))return c.famdesc+" Typical use: "+{"CPU":"computers and servers","GPU":"rendering and AI training","NPU":"on-device AI","SOC":"phones and embedded systems","MCU":"appliances and sensors","FPGA":"reconfigurable lab and comms gear","MEMC":"memory subsystems","SENSOR":"cameras and instruments","PMIC":"power boards","QCTRL":"quantum labs","PHOT":"optical interconnect","NEURO":"low-power cognition","DSP":"audio and radio","MODEM":"wireless devices","SEC":"secure devices","CHIPLET":"multi-die packages"}[c.fam]+".";
+ return "I can only answer from this design's spec sheet — try asking about its process node, power, pins, transistors, clock, materials, board sections, or lineage.";}
+};
+/* ---------- finder ---------- */
+var Finder={ask:function(){const q=document.getElementById("finderq").value.trim();const box=document.getElementById("finderres");
+ if(!q){box.innerHTML="";return;}
+ const stop=new Set("the,a,an,for,with,and,that,this,from,into,need,needing,want,make,chip,design".split(","));
+ const kw=q.toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>=3&&!stop.has(w));
+ if(!kw.length){box.innerHTML='<div class="fcard">Tell me a bit more — e.g. "fast graphics chip" or "tiny low power controller".</div>';return;}
+ const E=window.ChipEngine;
+ const scored=DB.rows.map(r=>{const hay=(r[1]+" "+E.FAMDEF[r[2]].label+" "+E.FAMDEF[r[2]].desc+" "+r[3]).toLowerCase();let s=0;kw.forEach(k=>{if(r[0].toLowerCase().includes(k))s+=6;else if(r[1].toLowerCase().includes(k))s+=4;else if(hay.includes(k))s+=2;});return[r,s];}).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||(a[0][0]<b[0][0]?-1:1)).slice(0,5);
+ if(!scored.length){box.innerHTML='<div class="fcard">Nothing on the shelves matches — try fewer, simpler words, or browse a family below.</div>';return;}
+ box.innerHTML='<div style="color:var(--cyan);margin:6px 0">Top matches for “'+esc(q)+'”:</div>'+scored.map(x=>{const r=x[0];return '<div class="fcard"><a class="takeme" href="?chip='+r[0]+'">Take me there →</a><b>'+esc(r[1])+'</b><br><span style="color:var(--dim);font-size:12px">'+r[0]+' · '+esc(E.FAMDEF[r[2]].label)+' · '+r[3]+'</span></div>';}).join("");
+}};
+/* ---------- boot ---------- */
+window.addEventListener("DOMContentLoaded",async()=>{
+ try{await loadIndex();}catch(e){document.getElementById("livecount").textContent="1,600";}
+ const id=qp("chip");
+ if(id&&/^JAH-CHIP-\d{6}$/.test(id)){await openChip(id);}
+ else{UI.init();}
+});
+</script>
+</body>
+</html>

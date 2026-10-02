@@ -1,0 +1,12 @@
+{
+ "site": "The Signature Computer Chip Maker and Archive",
+ "site_url": "https://justinahiggins614-cmyk.github.io/signature-chip-maker/",
+ "designs_seeded": 1600,
+ "goal": 1000000,
+ "id_scheme": "JAH-CHIP-######",
+ "part_scheme": "SIG-CHIP-#### (Signature-original)",
+ "deep_link": "?chip=JAH-CHIP-000001",
+ "search_index": "data/index/chips.search.json.gz",
+ "chunks": "data/chunks/cNNNNN.json.gz (200/chunk)",
+ "note": "All designs are original Signature-line works. No real manufacturer branding, part numbers, or datasheet text."
+}
