@@ -7,6 +7,9 @@
  "part_scheme": "SIG-CHIP-#### (Signature-original)",
  "deep_link": "?chip=JAH-CHIP-000001",
  "search_index": "data/index/chips.search.json.gz",
+ "catalog_feed": "data/chips-catalog.json",
+ "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html)",
+ "sitemap_index": "sitemap.xml -> sitemap-core.xml + sitemap-chips-bNNN.xml",
  "chunks": "data/chunks/cNNNNN.json.gz (200/chunk)",
  "note": "All designs are original Signature-line works. No real manufacturer branding, part numbers, or datasheet text."
 }
