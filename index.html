@@ -7,6 +7,7 @@
 <meta name="description" content="The Signature Computer Chip Maker and Archive: original Signature-line chip designs for every chip type ever made or projected — CPUs, GPUs, AI accelerators, SoCs, microcontrollers, FPGAs, quantum control and more. Deterministic generator marching to 1,000,000 designs.">
 <link rel="canonical" href="https://justinahiggins614-cmyk.github.io/signature-chip-maker/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"The Signature Computer Chip Maker and Archive","url":"https://justinahiggins614-cmyk.github.io/signature-chip-maker/","description":"Original Signature-line computer chip designs: full plans, circuit-board images and specs for every chip type, marching to 1,000,000 designs."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"The Signature Computer Chip Maker and Archive","url":"https://justinahiggins614-cmyk.github.io/signature-chip-maker/","creator":{"@type":"Person","name":"Justin Addam Higgins"},"description":"Original Signature-line computer chip designs: full plans, circuit-board images and specs for every chip type, marching to 1,000,000 designs."}</script>
 <script src="engine.js"></script>
 <script src="js/jah-talk-fallback.js"></script>
 <style>
@@ -65,15 +66,27 @@ main{max-width:1080px;margin:0 auto;padding:10px 12px 60px}
 .backlink{display:inline-block;margin:10px 0;color:var(--cyan);cursor:pointer}
 footer{border-top:2px solid var(--copper);padding:16px;text-align:center;color:var(--dim);font-size:12.5px}
 .staticcount{color:var(--dim);font-size:13px;text-align:center;margin:8px}
+/* FIX-03: stat tickers collapse on mobile (<768px); desktop unchanged */
+details.mstats-inline{display:inline-block;margin-top:8px}
+details.mstats-inline>.countchip{margin:0}
+details.mstats-inline>summary{cursor:pointer;color:var(--dim);font-size:.85em;list-style:none}
+details.mstats-inline>summary::-webkit-details-marker{display:none}
+@media(min-width:768px){details.mstats-inline>summary{display:none}}
+/* FIX-04: modal scrim + focused chip detail view */
+#scrim{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:90;display:none}
+#chipview.modal-open{position:relative;z-index:100;max-height:calc(100vh - 24px);overflow-y:auto}
+/* FIX-05: sticky A-Z index bar */
+#azrow{position:sticky;top:0;background:var(--navy);z-index:60;padding:6px 0}
 </style>
 </head>
 <body>
+<div id="scrim" aria-hidden="true"></div>
 <header class="brand">
 <h1>⚙ THE SIGNATURE COMPUTER CHIP MAKER AND ARCHIVE</h1>
 <p>Original Signature-line chip designs — every chip type ever made or projected, fully planned, drawn and specified.</p>
-<div class="countchip"><span id="livecount">…</span> / 1,000,000 DESIGNS</div>
+<details class="mstats-inline" open><summary>Site statistics</summary><div class="countchip"><span id="livecount">…</span> / 1,000,000 DESIGNS</div></details>
 </header>
-<nav class="jahnet" aria-label="THE JAH NETWORK">
+<nav class="jahnet" role="navigation" aria-label="JAH Network Global Ecosystem">
 <a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Phone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">Spec Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">PC Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/">Cyber Mega-Mall</a><a href="https://justinahiggins614-cmyk.github.io/signature-university/">Signature University</a><a href="https://justinahiggins614-cmyk.github.io/signature-books/">Book Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-comics/">Comic Store</a><a href="https://justinahiggins614-cmyk.github.io/signature-newspapers/">Global Newspaper Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">3D Print Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-backend/">Mad Scientist Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-boundless-generators/">Boundless Generator Archive</a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/">AI Mix Lab<span class="soonpill">SOON</span></a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-olypics/">AI Olypics<span class="soonpill">SOON</span></a><span class="here">Chip Maker and Archive — YOU ARE HERE</span><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-app-archive/">App Archive<span class="soonpill">SOON</span></a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/">AI Robot Matcher<span class="soonpill">SOON</span></a><a href="https://justinahiggins614-cmyk.github.io/signature-experiment-solver/">Experiment Solver</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/">Signature AI Pixel</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/">Signature Music Studio</a>
 </nav>
 <main>
@@ -122,16 +135,19 @@ more:function(){UI.render(false);},
 open:function(id){location.search="?chip="+id;}
 };
 /* ---------- chip detail ---------- */
+function modalOpenChip(v){var s=document.getElementById("scrim");if(s)s.style.display="block";v.classList.add("modal-open");document.body.style.overflow="hidden";}
+function chipBack(){var s=document.getElementById("scrim");if(s)s.style.display="none";document.body.style.overflow="";location.search="";}
 async function openChip(id){
  document.getElementById("home").style.display="none";
  const v=document.getElementById("chipview");v.style.display="block";
+ modalOpenChip(v);
  v.innerHTML='<p style="color:var(--dim)">Loading '+esc(id)+'…</p>';
  const row=await loadRow(id);
- if(!row){v.innerHTML='<span class="backlink" onclick="location.search=\'\'">← back</span><p>Design not found.</p>';return;}
+ if(!row){v.innerHTML='<span class="backlink" onclick="chipBack()">← back</span><p>Design not found.</p>';return;}
  const E=window.ChipEngine, c=E.renderChip(row);
  const F=E.FAMDEF[row.fam];
  const pcQ=encodeURIComponent(row.name.replace(/^Signature /,"").split(" ")[0]+" chip");
- let h='<span class="backlink" onclick="location.search=\'\'">← back to archive</span>';
+ let h='<span class="backlink" onclick="chipBack()">← back to archive</span>';
  h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era · Signature part '+esc(c.sigpart)+'</div>';
  h+='<div class="toolbar"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button></div>';
  h+='<table class="spectable">';
@@ -239,6 +255,8 @@ var Finder={ask:function(){const q=document.getElementById("finderq").value.trim
 }};
 /* ---------- boot ---------- */
 window.addEventListener("DOMContentLoaded",async()=>{
+ try{if(window.innerWidth<768){var d=document.querySelector("details.mstats-inline");if(d)d.removeAttribute("open");}}catch(e){}
+ var sc=document.getElementById("scrim");if(sc)sc.onclick=chipBack;
  try{await loadIndex();}catch(e){document.getElementById("livecount").textContent="1,600";}
  const id=qp("chip");
  if(id&&/^JAH-CHIP-\d{6}$/.test(id)){await openChip(id);}
