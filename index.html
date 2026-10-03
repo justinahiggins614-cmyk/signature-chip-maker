@@ -132,6 +132,27 @@ details.mstats-inline>summary::-webkit-details-marker{display:none}
 #jahThemeToggle:hover{opacity:1}
 html[data-theme="dark"]{filter:invert(1) hue-rotate(180deg)}
 html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"] canvas,html[data-theme="dark"] svg{filter:invert(1) hue-rotate(180deg)}
+/* FIRST-TIME USER GUIDE: spotlight tour + guide panel. Theme-matched; overlays never block content (clicks pass through, Esc/Skip always dismiss). */
+#guidebtn{background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:20px;padding:8px 18px;cursor:pointer;font-family:inherit;font-size:14px;margin-top:8px;min-height:44px}
+#guidebtn:hover{background:var(--copper);color:#0a1628}
+#tourscrim{position:fixed;inset:0;z-index:200;pointer-events:none}
+#tourring{position:absolute;border:3px solid var(--gold);border-radius:12px;box-shadow:0 0 0 9999px rgba(4,10,20,.55);transition:all .25s ease;display:none}
+#tourcard{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;z-index:201;max-width:540px;width:calc(100% - 24px);background:var(--navy2);border:2px solid var(--copper);border-radius:14px;padding:14px 16px;box-shadow:0 8px 30px rgba(0,0,0,.6);display:none}
+#tourcard h3{margin:0;color:var(--gold);font-size:16px}
+#tourcard .tstep{font-size:12px;color:var(--dim);margin-bottom:6px}
+#tourcard .twhat{font-size:13.5px;margin:8px 0 4px}
+#tourcard .twhat b{color:var(--cyan)}
+#tourcard .thow{font-size:13px;color:var(--dim);margin:0 0 10px;padding-left:18px}
+#tourcard .thow li{margin:3px 0}
+#tourcard .tbtns{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+#tourcard button{background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;min-width:44px}
+#tourcard button.tprimary{background:var(--cyan);color:#0a1628;font-weight:bold}
+#guidepanel{position:fixed;left:50%;transform:translateX(-50%);top:12px;bottom:12px;z-index:201;max-width:660px;width:calc(100% - 24px);background:var(--navy2);border:2px solid var(--copper);border-radius:14px;padding:16px 18px;overflow-y:auto;display:none}
+#guidepanel h2{color:var(--gold);margin:0 0 6px;font-size:19px}
+#guidepanel h3{color:var(--cyan);margin:14px 0 4px;font-size:15px}
+#guidepanel p,#guidepanel li{font-size:13.5px}
+#guidepanel ul{margin:6px 0;padding-left:20px}
+#guidepanel .gclose{float:right;background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;min-width:44px}
 </style>
 </head>
 <body>
@@ -141,7 +162,8 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 <div class="sitekicker"><b>SITE 18 OF 27</b> · THE JAH NETWORK</div>
 <h1>⚙ THE SIGNATURE COMPUTER CHIP MAKER AND ARCHIVE</h1>
 <p>Original Signature-line chip designs — every chip type ever made or projected, fully planned, drawn and specified.</p>
-<details class="mstats-inline" open><summary>Site statistics</summary><div class="countchip"><span id="livecount">…</span> / 1,000,000 DESIGNS</div></details>
+<details class="mstats-inline" open><summary>Site statistics</summary><div class="countchip"><span id="livecount">15,600</span> / 1,000,000 DESIGNS</div></details><br>
+<button type="button" id="guidebtn" onclick="Guide.open()" aria-label="Open the how-to-use guide">? Guide</button>
 </header>
 <nav class="jahnet" role="navigation" aria-label="JAH Network Global Ecosystem">
 <a href="https://justinahiggins614-cmyk.github.io/signature-math/">1 Signature Math</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">2 Signature Universal Paradox Immune Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">3 The Signature Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">4 JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">5 JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">6 Signature Llama: The Fully Cyber Utilizable AI</a><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">7 The Signature AI Phone Book</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">8 Globally Rejustered Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">9 Signature Spec Catalog Pending Patents</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">10 The Signature PC System Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-books/">11 The Signature Book Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-comics/">12 The Signature Comic Store</a><a href="https://justinahiggins614-cmyk.github.io/signature-newspapers/">13 The Signature Global Newspaper Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-backend/">14 The Signature AI Mad Scientist Creation Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-boundless-generators/">15 The Signature Boundless Generator Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/">16 The Signature AI Mix Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-olypics/">17 AI Olypics</a><a href="https://justinahiggins614-cmyk.github.io/signature-chip-maker/">18 The Signature Computer Chip Maker and Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-app-archive/">19 The Signature App Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/">20 The Signature AI Robot Matcher</a><a href="https://justinahiggins614-cmyk.github.io/signature-experiment-solver/">21 The Signature Experiment Solver</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/">22 Signature AI Pixel</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/">23 Signature Music Studio</a><a href="https://justinahiggins614-cmyk.github.io/signature-fixit/">24 The Signature Mr Fix-It</a><a href="https://justinahiggins614-cmyk.github.io/signature-university/">25 The Signature University</a><a href="https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/">26 The Signature Cyber Mega-Mall</a><a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">27 The Signature 3D Print Depository</a>
@@ -158,7 +180,7 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 <div class="azrow" id="famrow" aria-label="Filter by chip family"></div>
 <div class="azrow" id="azrow" aria-label="A to Z"></div>
 </div>
-<p class="staticcount">11,600 original Signature chip designs archived as of 2026-10-03 — IDs JAH-CHIP-000001…JAH-CHIP-011600, 16 families. Full records render deterministically in-browser from design seeds. Statuses: design CONCEPT (design only), simulation NOT_SIMULATED, test NOT_TESTED, manufacturing NOT_MANUFACTURED. Machine-readable: chip-archive-manifest.json · api.json · schema/ · llms.txt · ai-manifest.json. <a href="methodology.html" style="color:var(--cyan)">Data &amp; methodology</a></p>
+<p class="staticcount">15,600 original Signature chip designs archived as of 2026-10-03 — IDs JAH-CHIP-000001…JAH-CHIP-015600, 16 families. Full records render deterministically in-browser from design seeds. Statuses: design CONCEPT (design only), simulation NOT_SIMULATED, test NOT_TESTED, manufacturing NOT_MANUFACTURED. Machine-readable: chip-archive-manifest.json · api.json · schema/ · llms.txt · ai-manifest.json. <a href="methodology.html" style="color:var(--cyan)">Data &amp; methodology</a></p>
 <div id="home"><div class="grid" id="grid"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading chip designs…</p></div></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button><div id="loadstat" style="color:var(--dim);font-size:12px;margin-top:6px" aria-live="polite"></div></div></div>
 <div id="chipview" style="display:none"></div>
 </main>
@@ -203,7 +225,8 @@ async function loadManifest(retry){
   }
  }
 }
-async function loadIndex(){const t=await gz("data/index/chips.search.json.gz");const rows=t.trim().split("\n").map(l=>JSON.parse(l));DB.rows=rows;rows.forEach(r=>DB.byId[r[0]]=r);DB.total=rows.length;if(!MAN)document.getElementById("livecount").textContent=DB.total.toLocaleString("en-US");}
+var BOOTERR=null;
+async function loadIndex(){try{const t=await withTimeout(gz("data/index/chips.search.json.gz"),20000);const rows=t.trim().split("\n").map(l=>JSON.parse(l));DB.rows=rows;rows.forEach(r=>DB.byId[r[0]]=r);DB.total=rows.length;if(!MAN)document.getElementById("livecount").textContent=DB.total.toLocaleString("en-US");}catch(e){BOOTERR=e;}}
 async function loadRow(id){const n=parseInt(id.split("-")[2],10);const c=String(Math.floor((n-1)/200)+1).padStart(5,"0");const t=await gz("data/chunks/c"+c+".json.gz");for(const l of t.trim().split("\n")){const r=JSON.parse(l);if(r.id===id)return r;}return null;}
 /* ---------- home grid ---------- */
 var UI={shown:0,filter:null,letter:null,
@@ -211,23 +234,27 @@ init:function(){const fr=document.getElementById("famrow");const E=window.ChipEn
  fr.innerHTML='<button data-f="" class="on" onclick="UI.setFam(\'\')">All</button>'+E.FAMS.map(f=>'<button data-f="'+f+'" onclick="UI.setFam(\''+f+'\')">'+esc(E.FAMDEF[f].label.replace("Signature ",""))+'</button>').join("");
  const az=document.getElementById("azrow");let h='<a href="#" data-l="" class="on" onclick="UI.setLetter(\'\');return false">All</a>';
  for(let i=65;i<=90;i++){const L=String.fromCharCode(i);h+='<a href="#" data-l="'+L+'" onclick="UI.setLetter(\''+L+'\');return false">'+L+'</a>';}
- az.innerHTML=h;var l=document.querySelector("#grid .loadline");if(l)l.parentNode.removeChild(l);UI.more();},
+ az.innerHTML=h;var l=document.querySelector("#grid .loadline");if(l)l.parentNode.removeChild(l);
+ if(BOOTERR||!DB.rows.length){document.getElementById("grid").innerHTML='<div class="loadline" role="alert" style="grid-column:1/-1"><p>⚠ Chip designs could not load ('+esc((BOOTERR&&BOOTERR.message)||"index empty")+'). The counter above shows the last known total.</p><p><button class="toolbar" onclick="location.reload()">Retry</button></p></div>';document.getElementById("morebtn").style.display="none";return;}
+ UI.more();},
 setFam:function(f){UI.filter=f||null;UI.shown=0;document.querySelectorAll("#famrow button").forEach(b=>b.classList.toggle("on",b.dataset.f===(f||"")));UI.render(true);},
 setLetter:function(l){UI.letter=l||null;UI.shown=0;document.querySelectorAll("#azrow a").forEach(a=>a.classList.toggle("on",a.dataset.l===(l||"")));UI.render(true);},
 rows:function(){return DB.rows.filter(r=>(!UI.filter||r[2]===UI.filter)&&(!UI.letter||r[1].toUpperCase().indexOf("SIGNATURE "+UI.letter)===0));},
 render:function(reset){const rs=UI.rows();if(reset){UI.shown=0;document.getElementById("grid").innerHTML="";}
  const g=document.getElementById("grid");const E=window.ChipEngine;
  const slice=rs.slice(UI.shown,UI.shown+48);UI.shown+=slice.length;
- g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="recbadge mini">SIGNATURE ORIGINAL</span><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div></div>').join(""));
+ g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="recbadge mini">SIGNATURE ORIGINAL</span><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div><div class="meta" title="Design CONCEPT · simulation NOT_SIMULATED · test NOT_TESTED · manufacturing NOT_MANUFACTURED" style="margin-top:3px"><span class="pill status" style="font-size:10px;padding:1px 8px;margin:0">CONCEPT · NOT_SIMULATED · NOT_TESTED · NOT_MANUFACTURED</span></div></div>').join(""));
  document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";
  const ls=document.getElementById("loadstat");if(ls)ls.textContent="Showing "+UI.shown.toLocaleString("en-US")+" of "+rs.length.toLocaleString("en-US")+" designs";},
 more:function(){UI.render(false);},
 /* GEMINI #20 FIX-1: featured design spotlight — full chip rendered on first paint */
 spotlight:async function(){
  const box=document.getElementById("spotlight");if(!box)return;
+ try{
  let feat=null;for(let i=0;i<DB.rows.length;i++){if(DB.rows[i][3]==="Modern"){feat=DB.rows[i];break;}}
- if(!feat)feat=DB.rows[0];if(!feat){box.style.display="none";return;}
- const row=await loadRow(feat[0]);if(!row){box.style.display="none";return;}
+ if(!feat)feat=DB.rows[0];if(!feat)throw new Error("design index not loaded");
+ const row=await withTimeout(loadRow(feat[0]),15000);
+ if(!row)throw new Error("design record not found");
  const E=window.ChipEngine,c=E.canonicalRecord(row);
  let h='<div style="color:var(--gold);font-weight:bold">★ FEATURED DESIGN — a real chip design, right now</div>';
  h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era</div>';
@@ -236,6 +263,9 @@ spotlight:async function(){
  h+='<p>'+esc(c.famdesc)+' <b>Process:</b> '+esc(c.node)+' · <b>Transistors:</b> '+E.fmt(c.transistors)+' · <b>Power:</b> '+c.tdp+' W · <b>Core voltage:</b> '+esc(c.voltage)+'</p>';
  h+='<div class="toolbar"><button onclick="location.search=\'?chip='+c.id+'\'" style="font-weight:bold">Open the full spec →</button><button class="randbtn" onclick="UI.random()">🎲 Surprise me — random design</button></div>';
  box.innerHTML=h;
+ }catch(e){
+  box.innerHTML='<div class="loadline" role="alert"><p>⚠ Featured design could not load ('+esc(e.message||e)+').</p><p><button class="toolbar" onclick="UI.spotlight()">Retry</button></p></div>';
+ }
 },
 random:function(){if(!DB.rows.length)return;const r=DB.rows[Math.floor(Math.random()*DB.rows.length)];location.search="?chip="+r[0];},
 open:function(id){location.search="?chip="+id;}
@@ -248,8 +278,8 @@ async function openChip(id){
  const v=document.getElementById("chipview");v.style.display="block";
  modalOpenChip(v);
  v.innerHTML='<div class="loadline" aria-live="polite"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Rendering design '+esc(id)+'…</p></div>';
- const row=await loadRow(id);
- if(!row){v.innerHTML='<span class="backlink" onclick="chipBack()">← back</span><p>Design not found.</p>';return;}
+ let row=null,rowErr=null;try{row=await withTimeout(loadRow(id),20000);}catch(e){rowErr=e;}
+ if(!row){v.innerHTML='<span class="backlink" onclick="chipBack()">← back</span><p>'+(rowErr?'⚠ Could not load this design ('+esc(rowErr.message||rowErr)+'). <button class="toolbar" onclick="location.reload()">Retry</button>':'Design not found.')+'</p>';return;}
  const E=window.ChipEngine, c=E.canonicalRecord(row);
  const F=E.FAMDEF[row.fam];
  const pcQ=encodeURIComponent(row.name.replace(/^Signature /,"").split(" ")[0]+" chip");
@@ -257,7 +287,7 @@ async function openChip(id){
  h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era · Signature part '+esc(c.sigpart)+'</div>';
  /* GEMINI #20 FIX-3/FIX-5: design status + origin badges, impossible to miss */
  /* CONSISTENCY PASS: canonical record-status badge + provenance line */
- h+='<div style="margin:8px 0"><span class="reclbl">RECORD STATUS</span><span class="recbadge">SIGNATURE ORIGINAL</span><span class="pill status">CONCEPTUAL DESIGN — not fabrication-ready</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
+ h+='<div style="margin:8px 0"><span class="reclbl">RECORD STATUS</span><span class="recbadge">SIGNATURE ORIGINAL</span><span class="pill status">CONCEPTUAL DESIGN — not fabrication-ready</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span><br><span style="color:var(--dim);font-size:11px">design_status=CONCEPT · sim_status=NOT_SIMULATED · test_status=NOT_TESTED · mfg_status=NOT_MANUFACTURED</span></div>';
  h+='<p class="provline"><b>Provenance:</b> made by ChipEngine v'+esc(c.engineVer||"1.0")+' (deterministic design solver) · design seed '+esc(String(c.seed))+' · record '+esc(c.id)+'</p>';
  h+='<div class="toolbar" role="group" aria-label="Record panel: copy, download, read aloud"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button><button onclick="UI.verify()">✓ Verify design</button><button onclick="UI.report()">⚠ Report problem</button></div>';
  /* CONSISTENCY PASS: record panel — OPEN · SOURCE · ID · VERSION · SHARE (copy/download/read-aloud live in the toolbar above) */
@@ -473,6 +503,103 @@ window.addEventListener("DOMContentLoaded",async()=>{
  if(id&&/^JAH-CHIP-\d{6}$/.test(id)){await openChip(id);}
  else{try{await UI.spotlight();}catch(e){const b=document.getElementById("spotlight");if(b)b.style.display="none";}UI.init();}
 });
+</script>
+<!-- FIRST-TIME USER GUIDE: spotlight tour overlay + permanent guide panel -->
+<div id="tourscrim" aria-hidden="true"><div id="tourring"></div></div>
+<div id="tourcard" role="dialog" aria-modal="false" aria-label="Site tour" style="display:none">
+<div class="tstep" id="tourstep"></div>
+<h3 id="tourt"></h3>
+<p class="twhat" id="tourw"></p>
+<div style="font-size:12px;color:var(--dim);letter-spacing:.14em">HOW</div>
+<ol class="thow" id="tourh"></ol>
+<div class="tbtns"><button id="tourback">← Back</button><button id="tourskip">Skip tour</button><button id="tournext" class="tprimary">Next →</button></div>
+</div>
+<div id="guidepanel" role="dialog" aria-label="How to use this site" style="display:none">
+<button class="gclose" onclick="Guide.close()" aria-label="Close guide">✕ Close</button>
+<h2>? How to use this site</h2>
+<p style="color:var(--dim)">Every feature on The Signature Computer Chip Maker and Archive, in plain words.</p>
+<h3>🔎 Chip Finder</h3>
+<ul><li>Describe the chip you need in plain words — e.g. "low power sensor chip for a wearable". Results appear as you type.</li><li>Type an exact design ID like <b>JAH-CHIP-000123</b> to open that design directly. IDs are case-insensitive; digits are zero-padded for you.</li><li>The finder searches the archive only — it never invents designs.</li></ul>
+<h3>⚙ Families and A–Z</h3>
+<ul><li>The 16 family buttons filter the grid to one chip family: CPU, GPU, NPU, SoC, MCU, FPGA, memory controllers, sensors, power, quantum control, photonic, neuromorphic, DSP, modem, security enclave, chiplet interconnect.</li><li>The A–Z row filters by the first letter of the design name. Tap All to clear.</li></ul>
+<h3>★ Featured design</h3>
+<ul><li>A real design loads in the gold-bordered spotlight on every visit — spec summary plus the circuit-board drawing.</li><li><b>Open the full spec →</b> opens its complete record. <b>🎲 Surprise me</b> opens a random design.</li></ul>
+<h3>📄 Design records</h3>
+<ul><li>Tap any card to open its record: full spec table (purpose, architecture, process node, transistors, die size, package, voltage, clock, power, interfaces), the circuit-board drawing, block-by-block breakdown, and <b>🔧 Fabrication readiness</b> — what remains before real silicon.</li><li>Every record shows its honesty status: design <b>CONCEPT</b>, simulation <b>NOT_SIMULATED</b>, test <b>NOT_TESTED</b>, manufacturing <b>NOT_MANUFACTURED</b>. Every numeric spec is a GENERATED design target, never a measured value.</li></ul>
+<h3>✓ Verify design</h3>
+<ul><li>Recomputes the record's SHA-256 hash in your browser and compares it to the hash published in the archive index. <b>✓ MATCH</b> means the record is byte-identical to the shipped archive.</li></ul>
+<h3>🔊 Read aloud · ⧉ Copy · ⬇ Downloads</h3>
+<ul><li><b>🔊 Read aloud</b> speaks the spec through a tiered voice engine. The floating bar at the bottom gives <b>⏹ Stop</b>, <b>⏸ Pause</b>, <b>▶ Resume</b>.</li><li><b>⧉ Copy spec</b> copies the plain-text spec. <b>⬇ Download .txt / .json</b> save the full record, statuses included.</li></ul>
+<h3>RECORD panel</h3>
+<ul><li><b>↗ OPEN</b> opens the record's own link · <b>⇄ SOURCE</b> shows the design origin · <b># ID</b> shows and copies the design ID · <b>⚙ VERSION</b> shows the engine and schema version · <b>⤴ SHARE</b> shares the record link.</li></ul>
+<h3>🤖 Chip Helper · ⚠ Report</h3>
+<ul><li>The AI Helper on every record answers from that design's own spec sheet only — process node, power, pins, transistors, clock, materials, board sections, lineage.</li><li><b>⚠ Report problem</b> files a local-only report (kept on your device) about a spec issue.</li></ul>
+<h3>◐ Dark mode · data links</h3>
+<ul><li>The <b>◐</b> button top-right toggles an inverted dark theme.</li><li>Footer links: <b>api.json</b>, <b>chips-catalog.json</b>, the <b>static design index</b> (every design, by family), and the sitemap.</li></ul>
+<p style="color:var(--dim);margin-top:14px">To take this tour again, clear the saved tour flag in your browser storage (key: <b>jah-tour-seen-chips</b>) and reload.</p>
+</div>
+<script>
+/* FIRST-TIME USER GUIDE: spotlight tour (localStorage jah-tour-seen-chips) + guide panel.
+   Overlays never block content: clicks pass through the scrim; Esc/Skip/✕ always dismiss. */
+(function(){
+"use strict";
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+var SEEN="jah-tour-seen-chips";
+var steps=[
+ {sel:"header.brand",t:"Welcome to the archive",w:"<b>WHAT:</b> The Signature Computer Chip Maker and Archive — every original Signature chip design, marching to 1,000,000.",d:"<b>WHAT IT DOES:</b> This page is the front door to all 15,600 archived designs in 16 chip families.",h:["The counter chip shows the live archive total.","Tap ? Guide in the header any time to re-read the full guide."]},
+ {sel:"#finderbar",t:"Chip Finder",w:"<b>WHAT:</b> The search box at the top of the page.",d:"<b>WHAT IT DOES:</b> Describe the chip you need in plain words — or type an exact design ID like JAH-CHIP-000123 — to jump to real archived designs. It never invents results.",h:["Type, e.g., &ldquo;low power sensor chip for a wearable&rdquo;.","Type an exact ID (JAH-CHIP-######) to open that design directly."]},
+ {sel:"#famrow",t:"Families and A–Z",w:"<b>WHAT:</b> The family filter row and the A–Z row.",d:"<b>WHAT IT DOES:</b> Filters the grid to one chip family (CPU, GPU, NPU, and 13 more) or to designs whose names start with a letter.",h:["Tap a family to see only its designs.","Tap All to clear the filter."]},
+ {sel:"#spotlight",t:"Featured design",w:"<b>WHAT:</b> The gold-bordered spotlight box.",d:"<b>WHAT IT DOES:</b> Shows one real design — spec summary plus the circuit-board drawing — the moment the page loads.",h:["&ldquo;Open the full spec &rarr;&rdquo; opens its complete record.","&ldquo;&#127922; Surprise me&rdquo; opens a random design."]},
+ {sel:"#home",t:"Design records",w:"<b>WHAT:</b> The grid of design cards.",d:"<b>WHAT IT DOES:</b> Every card is one real design. Opening it shows the full spec table, the circuit-board drawing, block-by-block breakdown, fabrication readiness, downloads and the AI helper.",h:["Tap any card to open its record.","&ldquo;Load more designs&rdquo; extends the grid; the count line tracks progress.","Every card carries the design's honesty status."]},
+ {sel:null,t:"Verify a design",w:"<b>WHAT:</b> The &ldquo;&check; Verify design&rdquo; button on every record.",d:"<b>WHAT IT DOES:</b> Recomputes the record's SHA-256 hash in your browser and compares it to the hash published in the archive index.",h:["Open any design, then tap &ldquo;&check; Verify design&rdquo;.","&ldquo;&check; MATCH&rdquo; means the record is byte-identical to the shipped archive."]},
+ {sel:null,t:"Read aloud, copy, download",w:"<b>WHAT:</b> The record toolbar.",d:"<b>WHAT IT DOES:</b> &#128266; Read aloud speaks the spec; the floating bottom bar gives Stop / Pause / Resume. Copy and download buttons save the full record as text or JSON.",h:["Tap &#128266; Read aloud, control it from the bottom bar.","Downloads include the full status block: CONCEPT / NOT_SIMULATED / NOT_TESTED / NOT_MANUFACTURED."]},
+ {sel:null,t:"You are set",w:"<b>WHAT:</b> That is the whole site.",d:"<b>WHAT IT DOES:</b> Finder, families, featured design, records, verify, read-aloud, downloads — plus the &#129302; Chip Helper on every record, answering from that design's own spec sheet.",h:["This tour shows once; ? Guide in the header brings back this guide.","Honesty: every numeric spec is a GENERATED design target, never a measured value."]}
+];
+var card=document.getElementById("tourcard"),ring=document.getElementById("tourring");
+var i=0,active=false;
+function markSeen(){lsSet(SEEN,"1");}
+function place(){
+ var s=steps[i],el=s.sel?document.querySelector(s.sel):null;
+ if(el&&el.getBoundingClientRect){var r=el.getBoundingClientRect(),sy=window.scrollY||0;
+  ring.style.display="block";ring.style.left=(r.left+window.scrollX-6)+"px";ring.style.top=(r.top+sy-6)+"px";
+  ring.style.width=(r.width+12)+"px";ring.style.height=(r.height+12)+"px";
+  try{el.scrollIntoView({block:"center",behavior:"smooth"});}catch(e){}
+ }else{ring.style.display="none";}
+ document.getElementById("tourstep").textContent="Step "+(i+1)+" of "+steps.length;
+ document.getElementById("tourt").textContent=s.t;
+ document.getElementById("tourw").innerHTML=s.w+"<br>"+s.d;
+ document.getElementById("tourh").innerHTML=s.h.map(function(x){return "<li>"+x+"</li>";}).join("");
+ document.getElementById("tourback").disabled=(i===0);
+ document.getElementById("tourback").style.opacity=(i===0)?".45":"1";
+ document.getElementById("tournext").textContent=(i===steps.length-1)?"Done ✓":"Next →";
+}
+function show(){active=true;card.style.display="block";place();var b=document.getElementById("tournext");if(b)b.focus();}
+function hide(){active=false;card.style.display="none";ring.style.display="none";}
+window.Tour={start:function(){i=0;show();},next:function(){if(i<steps.length-1){i++;place();}else{Tour.end();}},back:function(){if(i>0){i--;place();}},skip:function(){markSeen();hide();},end:function(){markSeen();hide();},active:function(){return active;}};
+document.getElementById("tournext").onclick=function(){Tour.next();};
+document.getElementById("tourback").onclick=function(){Tour.back();};
+document.getElementById("tourskip").onclick=function(){Tour.skip();};
+window.addEventListener("resize",function(){if(active)place();});
+window.Guide={open:function(){document.getElementById("guidepanel").style.display="block";var c=document.querySelector("#guidepanel .gclose");if(c)c.focus();},
+ close:function(){document.getElementById("guidepanel").style.display="none";},
+ replay:function(){Guide.close();Tour.start();}};
+document.addEventListener("keydown",function(e){
+ var gp=document.getElementById("guidepanel");
+ if(gp&&gp.style.display==="block"){if(e.key==="Escape")Guide.close();return;}
+ if(!active)return;
+ if(e.key==="Escape")Tour.skip();
+ else if(e.key==="ArrowRight")Tour.next();
+ else if(e.key==="ArrowLeft")Tour.back();
+});
+window.addEventListener("DOMContentLoaded",function(){
+ setTimeout(function(){
+  if(lsGet(SEEN))return;
+  if(new URLSearchParams(location.search).get("chip"))return;
+  Tour.start();
+ },1200);
+});
+})();
 </script>
 <script>
 /* UX PASS: dark-mode toggle + session restore (localStorage only, nothing leaves this device) */

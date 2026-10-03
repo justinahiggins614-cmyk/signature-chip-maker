@@ -187,15 +187,26 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
                 + "<table><tr><th>ID</th><th>Name</th><th>Type</th><th>Era</th><th>Summary</th><th>Record status</th></tr>"
                 + "".join(trs) + "</table></body></html>")
         open(os.path.join(ROOT, "chips-fam-%s.html" % k), "w").write(page)
-    # re-stamp the static count line in index.html so bots see a fresh number
+    # re-stamp counts in index.html so bots + first paint see the true number.
+    # The manifest is the source of truth; keep the stamped static sentence and the
+    # livecount chip's initial content in sync every drip run.
     ip = os.path.join(ROOT, "index.html")
     h = open(ip).read()
     import re
-    new_line = "%s original Signature chip designs archived as of %s — the live counter above keeps growing." % (format(n, ",d"), date.today().isoformat())
-    h2 = re.sub(r">[0-9,]+ original Signature chip designs archived as of [0-9-]+ — the live counter above keeps growing\.<",
-                ">" + new_line + "<", h)
-    if h2 != h:
-        open(ip, "w").write(h2)
+    today = date.today().isoformat()
+    new_line = ("%s original Signature chip designs archived as of %s — IDs JAH-CHIP-000001…JAH-CHIP-%s, "
+                "16 families. Full records render deterministically in-browser from design seeds. "
+                "Statuses: design CONCEPT (design only), simulation NOT_SIMULATED, test NOT_TESTED, "
+                "manufacturing NOT_MANUFACTURED. Machine-readable: chip-archive-manifest.json · api.json · "
+                "schema/ · llms.txt · ai-manifest.json. "
+                "<a href=\"methodology.html\" style=\"color:var(--cyan)\">Data &amp; methodology</a>"
+                % (format(n, ",d"), today, str(n).zfill(6)))
+    h2 = re.sub(r">[0-9,]+ original Signature chip designs archived.*?</p>",
+                ">" + new_line + "</p>", h, flags=re.S)
+    h3 = re.sub(r'(<span id="livecount">)[^<]*(</span>)',
+                lambda m: m.group(1) + format(n, ",d") + m.group(2), h2)
+    if h3 != h:
+        open(ip, "w").write(h3)
     return len(fam_rows) if rows else 0
 
 
