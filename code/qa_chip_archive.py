@@ -143,7 +143,20 @@ chk2 = subprocess.run(["node", "-e",
 res2 = json.loads(chk2.stdout)
 check("no placeholder text in record strings", not res2["bad"], str(res2["bad"][:3]))
 
-# 13. api.json health block
+# 14. sitemap XML well-formed + listed in index
+import xml.dom.minidom
+sm_files = ["sitemap.xml"] + [f for f in sorted(os.listdir(ROOT)) if re.fullmatch(r"sitemap(-core|-chips-b\d{3})\.xml", f)]
+try:
+    for f in sm_files:
+        xml.dom.minidom.parse(os.path.join(ROOT, f))
+    check("sitemap XML well-formed (%d files)" % len(sm_files), True)
+except Exception as e:
+    check("sitemap XML well-formed", False, str(e))
+idx = open(os.path.join(ROOT, "sitemap.xml")).read()
+check("sitemap index lists all parts",
+      all(p in idx for p in ["sitemap-core.xml"] + ["sitemap-chips-b%03d.xml" % (i + 1) for i in range(len(cfs) * 200 // 1000)]))
+
+# 15. api.json version + health
 check("api.json health block", api.get("health", {}).get("status") == "OK"
       and api["health"].get("index_records") == n)
 
