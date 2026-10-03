@@ -91,7 +91,7 @@ def build_sitemap(base="https://justinahiggins614-cmyk.github.io/signature-chip-
     rows = all_rows()
     batch = 1000
     parts = []
-    core_urls = [base, base + "?browse=all", base + "chips.html"]
+    core_urls = [base, base + "?browse=all", base + "chips.html", base + "methodology.html"]
     core = ['<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in core_urls:

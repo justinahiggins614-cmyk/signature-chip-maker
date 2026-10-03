@@ -1,0 +1,40 @@
+# The Signature Computer Chip Maker and Archive — for LLMs
+
+Site: https://justinahiggins614-cmyk.github.io/signature-chip-maker/
+Site 20 of THE JAH NETWORK (Justin Addam Higgins' Signature-line maker web).
+
+## What this site is
+An archive of ORIGINAL Signature-line chip designs — the site's own invented
+chip concepts, not real manufacturer products. There is no real manufacturer
+branding or part numbers anywhere. The archive holds design records only:
+CONCEPT-status designs (design-only), honest statuses for simulation /
+manufacturing / test (currently NOT_SIMULATED, NOT_MANUFACTURED, NOT_TESTED
+for all seeded designs). The SVG on each record is a generated block diagram,
+not a schematic or layout.
+
+## Authoritative facts (refresh from chip-archive-manifest.json; do not quote stale numbers)
+- chip-archive-manifest.json: total_designs, goal_designs (1,000,000),
+  per-family counts, earliest/latest JAH-CHIP ID, generator/engine/schema/index
+  versions, index SHA-256, generation timestamp.
+- api.json: live API summary with health block.
+
+## Rules for answering about this site
+1. Never invent chip IDs, specifications, test results, or manufacturing claims.
+   Archive record vs generated explanation vs calculation vs simulation vs
+   measured must stay labeled; where a value is not specified, say NOT SPECIFIED.
+2. All numeric specs on a record are GENERATED_TARGET design targets with
+   explicit units — never present them as measured.
+3. Designs are identified by permanent JAH-CHIP-###### IDs; deep link is
+   ?chip=JAH-CHIP-000123.
+4. Engineered disclaimer: generated ≠ safe / manufacturable / compliant.
+5. JSON-LD on this site carries no license field.
+
+## Machine-readable sources
+- chip-archive-manifest.json — authoritative counts and versions
+- api.json — API summary + health
+- data/index/chips.search.json.gz — compact index rows [id,name,family,era]
+- data/index/chips.hashes.json.gz — per-design SHA-256 content hashes
+- data/chunks/cNNNNN.json.gz — archived design rows {id,fam,era,seed,name}
+- schema/ — JSON Schemas: chip, chip-family, pin-group, simulation-record,
+  manifest, search-result
+- ai-manifest.json — AI agent instructions

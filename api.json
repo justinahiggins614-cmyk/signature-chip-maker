@@ -98,7 +98,7 @@
  "schema_version": "JAH-CHIP-RECORD/1.0",
  "index_version": "chip-index-1.0",
  "index_hash_sha256": "98df10180d056f384de6f399b1e6117f7ade131b72668163e5c33476d3c5a9e2",
- "updated": "2026-10-03T15:34:16Z",
+ "updated": "2026-10-03T15:39:36Z",
  "id_scheme": "JAH-CHIP-######",
  "part_scheme": "SIG-CHIP-#### (Signature-original)",
  "deep_link": "?chip=JAH-CHIP-000001",
@@ -109,7 +109,7 @@
  "chunks": "data/chunks/cNNNNN.json.gz (200/chunk)",
  "health": {
   "status": "OK",
-  "last_build": "2026-10-03T15:34:16Z",
+  "last_build": "2026-10-03T15:39:36Z",
   "index_records": 11600,
   "index_hash_sha256": "98df10180d056f384de6f399b1e6117f7ade131b72668163e5c33476d3c5a9e2"
  },

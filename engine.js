@@ -195,11 +195,11 @@ function canonicalRecord(row){
       clk=Math.max(2,Math.round(pins*0.02)), rsv=Math.floor(rp()*8);
   var sig=pins-gnd-pwr-clk-rsv;
   var pinGroups=[
-    {group:"PWR", purpose:"power delivery", count:pwr, voltage_domain:c.voltage, direction:"in"},
-    {group:"GND", purpose:"ground return", count:gnd, voltage_domain:"0 V", direction:"in"},
-    {group:"CLK", purpose:"clock distribution", count:clk, voltage_domain:c.voltage, direction:"in/out"},
-    {group:"SIG", purpose:"signal I/O", count:sig, voltage_domain:"1.8/3.3 V I/O", direction:"in/out"},
-    {group:"RSV", purpose:"reserved / no-connect", count:rsv, voltage_domain:"n/a", direction:"n/a"}
+    {id:"PINGROUP-"+row.id+"-01", group:"PWR", purpose:"power delivery", count:pwr, voltage_domain:c.voltage, direction:"in", not_fabrication_pinout:true},
+    {id:"PINGROUP-"+row.id+"-02", group:"GND", purpose:"ground return", count:gnd, voltage_domain:"0 V", direction:"in", not_fabrication_pinout:true},
+    {id:"PINGROUP-"+row.id+"-03", group:"CLK", purpose:"clock distribution", count:clk, voltage_domain:c.voltage, direction:"in/out", not_fabrication_pinout:true},
+    {id:"PINGROUP-"+row.id+"-04", group:"SIG", purpose:"signal I/O", count:sig, voltage_domain:"1.8/3.3 V I/O", direction:"in/out", not_fabrication_pinout:true},
+    {id:"PINGROUP-"+row.id+"-05", group:"RSV", purpose:"reserved / no-connect", count:rsv, voltage_domain:"n/a", direction:"n/a", not_fabrication_pinout:true}
   ];
   var specs=[
     {key:"transistors", label:"Transistor count", value:c.transistors, unit:"count", kind:"GENERATED_TARGET"},
@@ -214,6 +214,7 @@ function canonicalRecord(row){
   ];
   c.record_schema=RECORD_SCHEMA;
   c.record_version="1.0";
+  c.family={id:row.fam, label:FAMS[row.fam].label, version:"1.0", rules_version:ENGVER};
   c.canonical_url="https://justinahiggins614-cmyk.github.io/signature-chip-maker/?chip="+c.id;
   c.creation_mode="SIGNATURE-GENERATED";
   c.value_kind="GENERATED_TARGET";
@@ -225,7 +226,13 @@ function canonicalRecord(row){
   c.specs=specs;
   c.pin_groups=pinGroups;
   c.pin_map_note="Functional pin-group map generated from the pin count — NOT a fabrication pinout. Per-pin netlists do not exist for conceptual designs.";
-  c.diagram={kind:"GENERATED_BLOCK_DIAGRAM", version:ENGVER, synced_with:"blocks[]",
+  c.diagram={artifact_kind:"BLOCK_DIAGRAM",
+    generated_by:"ChipEngine.boardSVG",
+    diagram_version:ENGVER,
+    diagram_fingerprint:"xmur3:"+(xmur3(JSON.stringify(c.blocks))()>>>0).toString(16).padStart(8,"0"),
+    fingerprint_of:"blocks[]",
+    synced_with_blocks:true,
+    synced_with_text:true,
     note:"Deterministic board illustration generated from the same block data as the spec table. It is a block diagram, not a schematic and not a fabrication drawing."};
   c.parent_chip_id=null;
   c.derived_from=null;

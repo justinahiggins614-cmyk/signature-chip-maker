@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data &amp; Methodology — The Signature Computer Chip Maker and Archive</title>
+<meta name="description" content="How chip designs are stored, generated, and verified in The Signature Computer Chip Maker and Archive: the Chip Record Standard, honest statuses, determinism, units policy, and what the archive does not claim.">
+<style>
+body{background:#0b1626;color:#e8ecf4;font-family:Georgia,'Times New Roman',serif;margin:0;padding:0}
+.wrap{max-width:860px;margin:0 auto;padding:24px 18px 60px}
+h1{color:#d4af37;font-family:Verdana,Arial,sans-serif;font-size:26px}
+h2{color:#7fd4ff;font-family:Verdana,Arial,sans-serif;font-size:18px;margin-top:30px}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+th,td{border:1px solid #2b3a55;padding:8px;text-align:left;vertical-align:top}
+th{color:#d4af37;font-family:Verdana,Arial,sans-serif}
+code{background:#12233d;padding:2px 6px;border-radius:4px;font-size:13px}
+.note{background:#12233d;border:1px solid #b8860b;border-radius:8px;padding:12px;margin:16px 0;font-size:14px}
+a{color:#7fd4ff}
+.back{display:inline-block;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">← Back to the Chip Maker</a>
+<h1>Data &amp; Methodology</h1>
+<p>The Signature Computer Chip Maker and Archive is an archive of <b>original Signature-line chip designs</b> —
+its own invented chip concepts. There is no real manufacturer branding or part numbers anywhere on the site.</p>
+
+<h2>1. How designs are stored</h2>
+<p>Designs are stored as compact rows in 200-per-file chunks:
+<code>data/chunks/cNNNNN.json.gz</code>, each row <code>{id, family, era, seed, name}</code>.
+The <code>data/index/chips.search.json.gz</code> index holds one row per design <code>[id, name, family, era]</code>;
+the Finder searches this index. Nothing is invented at search time — the Finder only returns archived rows.</p>
+<p>The full design record is <b>not</b> stored: it is rendered deterministically in the browser by
+<code>engine.js</code> from the design's seed (xmur3 + mulberry32 PRNG). Same family + seed + engine version
+⇒ byte-identical record, forever. A per-design SHA-256 content hash is published in
+<code>data/index/chips.hashes.json.gz</code>; the on-page <b>Verify design</b> button recomputes it locally.</p>
+
+<h2>2. The Chip Record Standard</h2>
+<p>Every design renders a machine-readable canonical record — schema <code>JAH-CHIP-RECORD/1.0</code>
+(see <code>schema/chip.schema.json</code>). It carries:</p>
+<ul>
+<li><b>Unit-labeled specs</b> — every numeric value carries an explicit SI unit (GHz, W, mm², V, mm, nm-class, bits, ns)
+and a value kind: <code>GENERATED_TARGET</code> (design target), <code>SIMULATED</code>, or <code>MEASURED</code>.</li>
+<li><b>Pin-group map</b> — functional groups with per-group IDs, purpose, and voltage domain. It is labeled
+<b>NOT a fabrication pinout</b>: real per-net layout assignments require actual EDA work.</li>
+<li><b>Block diagram</b> — a generated SVG illustration with version and hash, synced with the block list.
+It is a block diagram, never a schematic, netlist, or layout. No CAD/HDL/GDS artifacts exist for seeded designs.</li>
+<li><b>Lineage</b> — parent ID for remixes/variants (parents are never mutated); standalone originals carry <code>null</code>.</li>
+<li><b>Canonical URL</b> — refresh-safe deep link <code>?chip=JAH-CHIP-######</code>; per-record canonical link tag.</li>
+</ul>
+
+<h2>3. Completeness ladder (honest statuses)</h2>
+<p>"Fully planned, drawn and specified" is measured on a ladder — a design may never be marked at a level
+without the evidence for it. Design, simulation, manufacturing, and test are <b>separate states</b>:</p>
+<table>
+<tr><th>Design status</th><th>Meaning</th></tr>
+<tr><td>CONCEPT</td><td>Conceptual design — idea, architecture, target specs. Not fabrication-ready. (All seeded designs.)</td></tr>
+<tr><td>PLANNED</td><td>Planned feature set and block partitioning documented.</td></tr>
+<tr><td>SPECIFIED</td><td>Full written specification with units and interfaces.</td></tr>
+<tr><td>LOGIC-DESIGNED</td><td>RTL/logic design exists (requires HDL artifact on file).</td></tr>
+<tr><td>SCHEMATIC</td><td>Schematic capture exists (requires schematic artifact on file).</td></tr>
+<tr><td>LAYOUT-DESIGNED</td><td>Physical layout exists (requires layout artifact on file).</td></tr>
+<tr><td>PROTOTYPE</td><td>Physical prototype built.</td></tr>
+<tr><td>MANUFACTURED</td><td>Volume manufacturing. Never claimed without manufacturing evidence.</td></tr>
+</table>
+<p>Separately: <code>sim_status</code> is <code>NOT_SIMULATED</code> unless a simulator name, version, inputs, and
+result hash are on file (see <code>schema/simulation-record.schema.json</code>);
+<code>test_status</code> is <code>NOT_TESTED</code> unless test evidence is on file.</p>
+
+<h2>4. Value honesty</h2>
+<p>Every numeric spec on a seeded record is a <b>generated design target</b>, never a measurement.
+TARGET / SIMULATED / MEASURED values are never collapsed into one number. The archive contains no invented
+test data, no invented manufacturing evidence, and no invented simulation runs.</p>
+
+<h2>5. Permanent IDs</h2>
+<p>Design IDs <code>JAH-CHIP-######</code> are permanent: never reused, never changed. If a record were ever
+withdrawn, a tombstone with the ID and the withdrawal reason would remain. Archive IDs
+<code>JAH-CHIP-REPORT-YYYYMMDD-####</code> identify filed problem reports.</p>
+
+<h2>6. Creation modes</h2>
+<p>Every design carries a creation mode: <code>SIGNATURE-GENERATED</code> (rendered by the Signature generator),
+<code>USER-CREATED</code> (made on-page by a visitor), <code>SOURCE-DERIVED</code> (derived from a cited source,
+provenance preserved), <code>IMPORTED</code>, or <code>REMIXED</code> (with a parent chip ID).
+All seeded archive designs are <code>SIGNATURE-GENERATED</code>.</p>
+
+<h2>7. Corrections</h2>
+<p>Use <b>Report design problem</b> on any record. Reports carry an ID and a category and are kept per record;
+historical records are never silently rewritten — corrections become new record versions, with the old
+spec preserved and superseded versions marked.</p>
+
+<h2>8. What the archive does NOT claim</h2>
+<div class="note"><b>Engineering disclaimer.</b> These are generated design specifications — design-only concepts.
+They are not safety-certified, not manufacturable as-is, and not electrically compliant until real
+verification. High-voltage / high-power concepts require professional review. The archive is a design
+record system, not a semiconductor marketplace.</div>
+
+<h2>9. Authoritative sources</h2>
+<ul>
+<li><code>chip-archive-manifest.json</code> — the single authoritative source for counts and versions
+(homepage, Finder, archive pages, API, and sitemap all read it).</li>
+<li><code>api.json</code> — API summary with health block.</li>
+<li><code>ai-manifest.json</code>, <code>llms.txt</code> — AI agent instructions.</li>
+<li><code>schema/</code> — formal JSON Schemas for records, families, pin groups, simulations, manifests, search results.</li>
+</ul>
+<p><a href="index.html">← Back to the Chip Maker</a></p>
+</div>
+</body>
+</html>
