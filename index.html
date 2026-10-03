@@ -159,7 +159,7 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 <div class="azrow" id="azrow" aria-label="A to Z"></div>
 </div>
 <p class="staticcount">11,600 original Signature chip designs archived as of 2026-10-03 — the live counter above keeps growing.</p>
-<div id="home"><div class="grid" id="grid"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading chip designs…</p></div></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button></div></div>
+<div id="home"><div class="grid" id="grid"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading chip designs…</p></div></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button><div id="loadstat" style="color:var(--dim);font-size:12px;margin-top:6px" aria-live="polite"></div></div></div>
 <div id="chipview" style="display:none"></div>
 </main>
 <div id="ttsbar"><span id="ttstext" style="color:var(--dim);font-size:12px"></span><br>
@@ -174,8 +174,36 @@ THE JAH NETWORK · The Signature Computer Chip Maker and Archive · all designs 
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 async function gz(url){const r=await fetch(url);if(!r.ok)throw new Error("fetch "+r.status);const ab=await r.arrayBuffer();const ds=new DecompressionStream("gzip");const s=await new Response(new Blob([ab]).stream().pipeThrough(ds)).text();return s;}
 function qp(n){return new URLSearchParams(location.search).get(n);}
-var DB={rows:[],byId:{},total:1600};
-async function loadIndex(){const t=await gz("data/index/chips.search.json.gz");const rows=t.trim().split("\n").map(l=>JSON.parse(l));DB.rows=rows;rows.forEach(r=>DB.byId[r[0]]=r);DB.total=rows.length;document.getElementById("livecount").textContent=DB.total.toLocaleString("en-US");}
+var DB={rows:[],byId:{},total:0};
+var MAN=null;
+function setCount(txt,kind){const el=document.getElementById("livecount");if(!el)return;el.textContent=txt;
+ const chip=el.closest(".countchip");
+ if(chip){const bad=(kind==="error");
+  chip.style.cursor=bad?"pointer":"default";
+  chip.title=kind==="live"?"Live archive count from chip-archive-manifest.json":kind==="cached"?"Cached count — live manifest unreachable; tap to retry":kind==="stale"?"Last stamped count; tap to retry":"Tap to retry loading the count";
+  chip.onclick=bad||kind==="cached"||kind==="stale"?function(){loadManifest(true);}:null;}}
+function withTimeout(p,ms){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error("timeout"));},ms);})]);}
+async function loadManifest(retry){
+ const el=document.getElementById("livecount");
+ try{
+  const r=await withTimeout(fetch("chip-archive-manifest.json",{cache:"no-store"}),12000);
+  if(!r.ok)throw new Error("http "+r.status);
+  MAN=await r.json();
+  try{localStorage.setItem("jah-chip-manifest",JSON.stringify({t:Date.now(),m:MAN}));}catch(e){}
+  setCount(Number(MAN.total_designs).toLocaleString("en-US"),"live");
+ }catch(e){
+  let cached=null;try{cached=JSON.parse(localStorage.getItem("jah-chip-manifest")||"null");}catch(e2){}
+  if(cached&&cached.m&&cached.m.total_designs){
+   setCount(Number(cached.m.total_designs).toLocaleString("en-US")+" · LAST VERIFIED "+new Date(cached.t).toISOString().slice(0,10),"cached");
+  }else{
+   const st=document.querySelector(".staticcount");
+   const m=st?st.textContent.match(/([\d,]+) original Signature chip designs archived as of ([\d-]+)/):null;
+   if(m)setCount(m[1]+" · AS OF "+m[2],"stale");
+   else setCount("count unavailable — tap to retry","error");
+  }
+ }
+}
+async function loadIndex(){const t=await gz("data/index/chips.search.json.gz");const rows=t.trim().split("\n").map(l=>JSON.parse(l));DB.rows=rows;rows.forEach(r=>DB.byId[r[0]]=r);DB.total=rows.length;if(!MAN)document.getElementById("livecount").textContent=DB.total.toLocaleString("en-US");}
 async function loadRow(id){const n=parseInt(id.split("-")[2],10);const c=String(Math.floor((n-1)/200)+1).padStart(5,"0");const t=await gz("data/chunks/c"+c+".json.gz");for(const l of t.trim().split("\n")){const r=JSON.parse(l);if(r.id===id)return r;}return null;}
 /* ---------- home grid ---------- */
 var UI={shown:0,filter:null,letter:null,
@@ -191,7 +219,8 @@ render:function(reset){const rs=UI.rows();if(reset){UI.shown=0;document.getEleme
  const g=document.getElementById("grid");const E=window.ChipEngine;
  const slice=rs.slice(UI.shown,UI.shown+48);UI.shown+=slice.length;
  g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="recbadge mini">SIGNATURE ORIGINAL</span><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div></div>').join(""));
- document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";},
+ document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";
+ const ls=document.getElementById("loadstat");if(ls)ls.textContent="Showing "+UI.shown.toLocaleString("en-US")+" of "+rs.length.toLocaleString("en-US")+" designs";},
 more:function(){UI.render(false);},
 /* GEMINI #20 FIX-1: featured design spotlight — full chip rendered on first paint */
 spotlight:async function(){
@@ -199,7 +228,7 @@ spotlight:async function(){
  let feat=null;for(let i=0;i<DB.rows.length;i++){if(DB.rows[i][3]==="Modern"){feat=DB.rows[i];break;}}
  if(!feat)feat=DB.rows[0];if(!feat){box.style.display="none";return;}
  const row=await loadRow(feat[0]);if(!row){box.style.display="none";return;}
- const E=window.ChipEngine,c=E.renderChip(row);
+ const E=window.ChipEngine,c=E.canonicalRecord(row);
  let h='<div style="color:var(--gold);font-weight:bold">★ FEATURED DESIGN — a real chip design, right now</div>';
  h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era</div>';
  h+='<div style="margin:6px 0"><span class="pill status">CONCEPTUAL DESIGN</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
@@ -221,7 +250,7 @@ async function openChip(id){
  v.innerHTML='<div class="loadline" aria-live="polite"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Rendering design '+esc(id)+'…</p></div>';
  const row=await loadRow(id);
  if(!row){v.innerHTML='<span class="backlink" onclick="chipBack()">← back</span><p>Design not found.</p>';return;}
- const E=window.ChipEngine, c=E.renderChip(row);
+ const E=window.ChipEngine, c=E.canonicalRecord(row);
  const F=E.FAMDEF[row.fam];
  const pcQ=encodeURIComponent(row.name.replace(/^Signature /,"").split(" ")[0]+" chip");
  let h='<span class="backlink" onclick="chipBack()">← back to archive</span>';
@@ -230,7 +259,7 @@ async function openChip(id){
  /* CONSISTENCY PASS: canonical record-status badge + provenance line */
  h+='<div style="margin:8px 0"><span class="reclbl">RECORD STATUS</span><span class="recbadge">SIGNATURE ORIGINAL</span><span class="pill status">CONCEPTUAL DESIGN — not fabrication-ready</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
  h+='<p class="provline"><b>Provenance:</b> made by ChipEngine v'+esc(c.engineVer||"1.0")+' (deterministic design solver) · design seed '+esc(String(c.seed))+' · record '+esc(c.id)+'</p>';
- h+='<div class="toolbar" role="group" aria-label="Record panel: copy, download, read aloud"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button></div>';
+ h+='<div class="toolbar" role="group" aria-label="Record panel: copy, download, read aloud"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button><button onclick="UI.verify()">✓ Verify design</button><button onclick="UI.report()">⚠ Report problem</button></div>';
  /* CONSISTENCY PASS: record panel — OPEN · SOURCE · ID · VERSION · SHARE (copy/download/read-aloud live in the toolbar above) */
  h+='<div class="recbar" role="group" aria-label="Record panel: open, source, id, version, share"><span class="reclbl">RECORD</span><button onclick="UI.recOpen()">↗ OPEN</button><button onclick="UI.recSrc()">⇄ SOURCE</button><button onclick="UI.recId()"># ID</button><button onclick="UI.recVer()">⚙ VERSION</button><button onclick="UI.recShare()">⤴ SHARE</button></div><div class="recinfo" id="recinfo"></div>';
  h+='<table class="spectable">';
@@ -271,10 +300,42 @@ async function openChip(id){
    {"@type":"PropertyValue","name":"Design origin","value":c.designOrigin.split(" - ")[0]}]};
  const sp=document.createElement("script");sp.type="application/ld+json";sp.textContent=JSON.stringify(prod);document.head.appendChild(sp);
  document.title=c.name+" — The Signature Computer Chip Maker and Archive";
+ /* per-record canonical URL (refresh-safe deep link) */
+ let lk=document.querySelector('link[rel="canonical"][data-chip]');
+ if(!lk){lk=document.createElement("link");lk.rel="canonical";lk.setAttribute("data-chip","1");document.head.appendChild(lk);}
+ lk.href=c.canonical_url;
 }
+/* sorted-keys canonicalization — mirrors code/build_hashes.js exactly */
+function canonJSON(c){function sk(v){if(Array.isArray(v))return v.map(sk);if(v&&typeof v==="object"){const o={};Object.keys(v).sort().forEach(k=>{o[k]=sk(v[k]);});return o;}return v;}return JSON.stringify(sk(c));}
+UI.verify=function(){const c=window._chip;if(!c)return;const b=recInfoBox();
+ recInfoShow("<b>VERIFY DESIGN</b> — recomputing record hash…");b.dataset.kind="verify";
+ (async function(){
+  try{
+   const buf=await (await fetch("data/index/chips.hashes.json.gz")).arrayBuffer();
+   const ds=new DecompressionStream("gzip");
+   const txt=await new Response(new Blob([buf]).stream().pipeThrough(ds)).text();
+   let pub=null;
+   for(const l of txt.trim().split("\n")){const r=JSON.parse(l);if(r.id===c.id){pub=r;break;}}
+   if(!pub){recInfoShow("<b>VERIFY DESIGN</b> — no published hash for "+esc(c.id)+".");return;}
+   const hex=[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(canonJSON(c))))].map(x=>x.toString(16).padStart(2,"0")).join("");
+   const ok=hex===pub.hash;
+   recInfoShow("<b>VERIFY DESIGN</b> — "+esc(c.id)+"<br>Published hash:<br><span style='font-size:11px;word-break:break-all'>"+pub.hash+"</span><br>Recomputed locally:<br><span style='font-size:11px;word-break:break-all'>"+hex+"</span><br><b style='color:"+(ok?"#7CFC00":"#ff6b6b")+"'>"+(ok?"✓ MATCH — byte-identical to the published archive record":"✗ MISMATCH — record rendered by a different engine version (published: v"+esc(pub.engine)+")")+"</b><br><span style='color:var(--dim)'>"+c.specs.length+" unit-labeled specs · engine v"+esc(c.engineVer)+" · schema "+esc(c.record_schema)+" · design status "+esc(c.design_status)+" (NOT simulated / NOT tested / NOT manufactured)</span>");
+  }catch(e){recInfoShow("<b>VERIFY DESIGN</b> — could not load the published hash index ("+esc(e.message||e)+"). <button onclick='UI.verify()'>Retry</button>");}
+ })();};
+UI.report=function(){const c=window._chip;if(!c)return;const b=recInfoBox();
+ const cats=["wrong specification","wrong unit","duplicate","broken link","missing field","incorrect calculation","provenance problem","status problem","unsafe claim","other"];
+ recInfoShow("<b>⚠ REPORT A DESIGN PROBLEM</b> — "+esc(c.id)+"<br><span style='color:var(--dim)'>Reports stay on this device; correction history is preserved per record — historical records are never silently rewritten.</span><br><label>Category <select id='repcat' style='background:var(--navy2);color:var(--ink);border:1px solid var(--cyan);border-radius:6px;padding:6px'>"+cats.map(x=>"<option>"+x+"</option>").join("")+"</select></label> <button onclick='UI.fileReport()'>File report</button>");b.dataset.kind="report";};
+UI.fileReport=function(){const c=window._chip;if(!c)return;
+ const cat=(document.getElementById("repcat")||{}).value||"other";
+ const d=new Date().toISOString().slice(0,10).replace(/-/g,"");
+ let n=1;try{n=(parseInt(localStorage.getItem("jah-chip-report-n")||"0",10)||0)+1;localStorage.setItem("jah-chip-report-n",String(n));}catch(e){}
+ const rid="JAH-CHIP-REPORT-"+d+"-"+String(n).padStart(4,"0");
+ const rec={report_id:rid,chip_id:c.id,category:cat,filed_at:new Date().toISOString(),engine_version:c.engineVer,record_schema:c.record_schema,status:"LOCAL-ONLY"};
+ try{const log=JSON.parse(localStorage.getItem("jah-chip-report-log")||"[]");log.push(rec);localStorage.setItem("jah-chip-report-log",JSON.stringify(log));}catch(e){}
+ recInfoShow("<b>REPORT FILED (kept on this device)</b><br>"+esc(rid)+" · "+esc(c.id)+" · "+esc(cat)+"<br><textarea readonly rows='6' style='width:100%;background:var(--navy2);color:var(--ink);border:1px solid var(--cyan);border-radius:6px'>"+esc(JSON.stringify(rec,null,1))+"</textarea><div style='color:var(--dim);font-size:12px'>Copy the report above to send it in. The record itself is unchanged.</div>");};
 UI.copyChip=function(){const c=window._chip;if(!c)return;const t=chipText(c);navigator.clipboard.writeText(t).then(()=>alert("Spec copied."),()=>alert("Copy blocked by browser."));};
-UI.dlTxt=function(){const c=window._chip;if(!c)return;dl(c.id+".txt",chipText(c),"text/plain");};
-UI.dlJson=function(){const c=window._chip;if(!c)return;dl(c.id+".json",JSON.stringify(c,null,1),"application/json");};
+UI.dlTxt=function(){const c=window._chip;if(!c)return;dl(c.id+"-v"+(c.record_version||"1")+".txt",chipText(c),"text/plain");};
+UI.dlJson=function(){const c=window._chip;if(!c)return;dl(c.id+"-v"+(c.record_version||"1")+".json",JSON.stringify(c,null,1),"application/json");};
 /* CONSISTENCY PASS: record-panel actions (ES5-safe) */
 function recInfoBox(){return document.getElementById("recinfo");}
 function recInfoShow(html){const b=recInfoBox();if(!b)return;b.style.display="block";b.innerHTML=html;}
@@ -293,7 +354,17 @@ UI.recShare=function(){const u=UI.recDeep();const b=recInfoBox();
  if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){recInfoShow("<b>SHARE</b> — record link copied: "+esc(u));b.dataset.kind="share";},function(){recInfoShow("<b>SHARE</b> — record link: "+esc(u));b.dataset.kind="share";});}
  else{recInfoShow("<b>SHARE</b> — record link: "+esc(u));b.dataset.kind="share";}};
 function dl(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();}
-function chipText(c){let t=c.name+" ("+c.id+")\n"+c.label+" · "+c.era+" era · "+c.sigpart+"\n"+c.designStatus+"\n"+c.designOrigin+"\n\nPURPOSE\n"+c.famdesc+"\n\nARCHITECTURE\n"+c.arch+"\n\nSPEC\nProcess: "+c.node+"\nTransistors: "+c.transistors+"\nDie: "+c.die+" mm²\nPackage: "+c.pkg+" ("+c.pins+" pins)\nPackage dimensions: "+c.pkgDims+"\nCore voltage: "+c.voltage+"\nClock: "+c.clk+" GHz\n"+c.unit+": "+c.units+"\nTDP: "+c.tdp+" W\nISA: "+c.isa+"\nExternal interfaces: "+c.io.join(", ")+"\n\nPROCESS ASSUMPTIONS\n"+c.procAssump+"\n\nTHERMAL ASSUMPTIONS\n"+c.thermAssump+"\n\nFABRICATION READINESS\n"+c.designStatus+"\nWhat remains before real silicon:\n- "+c.fabRemain.join("\n- ")+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n";return t;}
+function chipText(c){let t=c.name+" ("+c.id+")\n"+c.label+" · "+c.era+" era · "+c.sigpart+"\n"
++"Record: "+(c.record_schema||"JAH-CHIP-RECORD/1.0")+" v"+(c.record_version||"1")+" · ChipEngine v"+(c.engineVer||"1.0")+"\n"
++"Creation mode: "+(c.creation_mode||"SIGNATURE-GENERATED")+" · Record status: SIGNATURE ORIGINAL\n"
++"Design status: "+(c.design_status||"CONCEPT")+" (CONCEPTUAL DESIGN — not fabrication-ready)\n"
++"Simulation: "+(c.sim_status||"NOT_SIMULATED")+" · Test: "+(c.test_status||"NOT_TESTED")+" · Manufacturing: "+(c.mfg_status||"NOT_MANUFACTURED")+"\n"
++"Value kind: every numeric spec below is a GENERATED design target, not a measured value.\n"
++"Canonical URL: "+(c.canonical_url||"")+"\n\n"+c.designStatus+"\n"+c.designOrigin+"\n\nPURPOSE\n"+c.famdesc+"\n\nARCHITECTURE\n"+c.arch+"\n\nSPEC (units shown)\n";
+c.specs.forEach(s=>{t+=s.label+": "+s.value+" "+s.unit+" ["+s.kind+"]\n";});
+t+="\nExternal interfaces: "+c.io.join(", ")+"\n\nPIN GROUPS (functional map — NOT a fabrication pinout)\n";
+c.pin_groups.forEach(g=>{t+=g.group+": "+g.count+" pins · "+g.purpose+" · "+g.voltage_domain+"\n";});
+t+="\nPROCESS ASSUMPTIONS\n"+c.procAssump+"\n\nTHERMAL ASSUMPTIONS\n"+c.thermAssump+"\n\nFABRICATION READINESS\n"+c.designStatus+"\nWhat remains before real silicon:\n- "+c.fabRemain.join("\n- ")+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n\nENGINEERING DISCLAIMER\nGenerated design specification. Not safety-certified, not manufacturable as-is, not electrically compliant until real verification. High-voltage/high-power concepts require professional review.\n";return t;}
 /* ---------- tiered TTS: ResponsiveVoice audio -> 2x Google TTS, audio-element playback ---------- */
 var RD={audio:null,queue:[],playing:false,stopped:true,timer:null,total:0};
 var RD_TIERS=[
@@ -379,19 +450,25 @@ search:function(fromButton){
  const q=document.getElementById("finderq").value.trim();const box=document.getElementById("finderres");
  if(!q){box.innerHTML="";return;}
  if(q.length<2){box.innerHTML='<div class="fcard" style="color:var(--dim)">Type a couple more letters…</div>';return;}
+ /* exact ID fast path: JAH-CHIP-000123 (any digit length, case-insensitive) */
+ const idm=q.match(/^JAH-CHIP-(\d{1,6})$/i);
+ if(idm){const id="JAH-CHIP-"+idm[1].padStart(6,"0");
+  if(DB.byId[id]){location.search="?chip="+id;return;}
+  box.innerHTML='<div class="fcard">No archived design with ID '+esc(id)+'.</div>';return;}
  const stop=new Set("the,a,an,for,with,and,that,this,from,into,need,needing,want,make,chip,design".split(","));
  const kw=q.toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>=3&&!stop.has(w));
  if(!kw.length){box.innerHTML='<div class="fcard">Tell me a bit more — e.g. "fast graphics chip" or "tiny low power controller".</div>';return;}
  const E=window.ChipEngine;
  const scored=DB.rows.map(r=>{const hay=(r[1]+" "+E.FAMDEF[r[2]].label+" "+E.FAMDEF[r[2]].desc+" "+r[3]).toLowerCase();let s=0;kw.forEach(k=>{if(r[0].toLowerCase().includes(k))s+=6;else if(r[1].toLowerCase().includes(k))s+=4;else if(hay.includes(k))s+=2;});return[r,s];}).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||(a[0][0]<b[0][0]?-1:1)).slice(0,5);
- if(!scored.length){box.innerHTML='<div class="fcard">Nothing on the shelves matches — try fewer, simpler words, or browse a family below.</div>';return;}
+ if(!scored.length){box.innerHTML='<div class="fcard"><b>No matching archived chip design.</b><br><span style="color:var(--dim)">Try fewer, simpler words, or browse a family below. Search covers the archive only — it never invents designs.</span></div>';return;}
  box.innerHTML='<div style="color:var(--cyan);margin:6px 0">⚡ '+scored.length+' live match'+(scored.length===1?"":"es")+' for “'+esc(q)+'”:</div>'+scored.map(x=>{const r=x[0];return '<div class="fcard"><a class="takeme" href="?chip='+r[0]+'">Take me there →</a><b>'+esc(r[1])+'</b><br><span style="color:var(--dim);font-size:12px">'+r[0]+' · '+esc(E.FAMDEF[r[2]].label)+' · '+r[3]+'</span></div>';}).join("");
 }};
 /* ---------- boot ---------- */
 window.addEventListener("DOMContentLoaded",async()=>{
  try{if(window.innerWidth<768){var d=document.querySelector("details.mstats-inline");if(d)d.removeAttribute("open");}}catch(e){}
  var sc=document.getElementById("scrim");if(sc)sc.onclick=chipBack;
- try{await loadIndex();}catch(e){document.getElementById("livecount").textContent="1,600";}
+ try{await loadManifest();}catch(e){}
+ try{await loadIndex();}catch(e){/* counter already shows manifest/cached/stale state — never a bare number */}
  const id=qp("chip");
  if(id&&/^JAH-CHIP-\d{6}$/.test(id)){await openChip(id);}
  else{try{await UI.spotlight();}catch(e){const b=document.getElementById("spotlight");if(b)b.style.display="none";}UI.init();}
