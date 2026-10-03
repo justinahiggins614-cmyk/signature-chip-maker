@@ -1,14 +1,15 @@
 {
+ "manifest_id": "JAH-CHIP-MANIFEST",
  "site": "The Signature Computer Chip Maker and Archive",
  "site_url": "https://justinahiggins614-cmyk.github.io/signature-chip-maker/",
  "site_number": 20,
- "manifest": "chip-archive-manifest.json",
- "designs_seeded": 11600,
+ "updated": "2026-10-03T15:34:16Z",
  "total_designs": 11600,
+ "generated_designs": 11600,
+ "archived_designs": 11600,
  "goal": 1000000,
  "remaining_to_goal": 988400,
- "latest_id": "JAH-CHIP-011600",
- "earliest_id": "JAH-CHIP-000001",
+ "progress": "11600 / 1000000 DESIGNS",
  "families": [
   {
    "key": "CPU",
@@ -92,26 +93,55 @@
   }
  ],
  "family_count": 16,
+ "id_scheme": "JAH-CHIP-######",
+ "earliest_id": "JAH-CHIP-000001",
+ "latest_id": "JAH-CHIP-011600",
  "archive_version": "2026-10-03",
  "generator_version": "chipgen-1.0",
  "engine_version": "1.0",
  "schema_version": "JAH-CHIP-RECORD/1.0",
  "index_version": "chip-index-1.0",
  "index_hash_sha256": "98df10180d056f384de6f399b1e6117f7ade131b72668163e5c33476d3c5a9e2",
- "updated": "2026-10-03T15:34:16Z",
- "id_scheme": "JAH-CHIP-######",
- "part_scheme": "SIG-CHIP-#### (Signature-original)",
+ "hashes_index": "data/index/chips.hashes.json.gz",
+ "chunks": {
+  "pattern": "data/chunks/cNNNNN.json.gz",
+  "per_chunk": 200,
+  "count": 58
+ },
  "deep_link": "?chip=JAH-CHIP-000001",
- "search_index": "data/index/chips.search.json.gz",
+ "record_status": "SIGNATURE ORIGINAL",
+ "creation_mode": "SIGNATURE-GENERATED",
+ "value_kind": "GENERATED_TARGET",
+ "value_kind_note": "Every numeric specification is a deterministically generated design target from the design seed. None are measured, simulated, manufactured, or tested values.",
+ "completeness_status_vocabulary": [
+  "CONCEPT",
+  "PLANNED",
+  "SPECIFIED",
+  "LOGIC-DESIGNED",
+  "SCHEMATIC",
+  "SIMULATED",
+  "LAYOUT-DESIGNED",
+  "PROTOTYPE",
+  "MANUFACTURED",
+  "TESTED"
+ ],
+ "design_status": {
+  "current": "CONCEPT",
+  "definition": "'Fully planned, drawn and specified' means: the architecture is planned (spec table), the board is drawn (generated block-diagram image), and every field of the Chip Record Standard is specified. It does NOT mean fabricated, simulated, or tested.",
+  "sim_status": "NOT_SIMULATED",
+  "test_status": "NOT_TESTED",
+  "mfg_status": "NOT_MANUFACTURED"
+ },
+ "creation_modes": [
+  "SIGNATURE-GENERATED",
+  "USER-CREATED",
+  "SOURCE-DERIVED",
+  "IMPORTED",
+  "REMIXED"
+ ],
  "catalog_feed": "data/chips-catalog.json",
+ "search_index": "data/index/chips.search.json.gz",
  "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html)",
  "sitemap_index": "sitemap.xml -> sitemap-core.xml + sitemap-chips-bNNN.xml",
- "chunks": "data/chunks/cNNNNN.json.gz (200/chunk)",
- "health": {
-  "status": "OK",
-  "last_build": "2026-10-03T15:34:16Z",
-  "index_records": 11600,
-  "index_hash_sha256": "98df10180d056f384de6f399b1e6117f7ade131b72668163e5c33476d3c5a9e2"
- },
  "note": "All designs are original Signature-line works. No real manufacturer branding, part numbers, or datasheet text."
 }

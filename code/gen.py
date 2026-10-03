@@ -198,10 +198,97 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
         open(ip, "w").write(h2)
     return len(fam_rows) if rows else 0
 
+
+def build_manifest(n, base="https://justinahiggins614-cmyk.github.io/signature-chip-maker/"):
+    """Authoritative chip-archive manifest: ONE source every counter reads.
+    chip-archive-manifest.json at repo root."""
+    import hashlib
+    from datetime import datetime, timezone
+    rows = all_rows()
+    fam_counts = {k: 0 for k in FAMS}
+    for r in rows:
+        fam_counts[r["fam"]] = fam_counts.get(r["fam"], 0) + 1
+    idx_path = os.path.join(IDX, "chips.search.json.gz")
+    idx_hash = ""
+    if os.path.exists(idx_path):
+        h = hashlib.sha256()
+        with open(idx_path, "rb") as f:
+            for b in iter(lambda: f.read(1 << 20), b""):
+                h.update(b)
+        idx_hash = h.hexdigest()
+    chunk_files = sorted(f for f in os.listdir(CHUNKS) if f.endswith(".json.gz"))
+    ids = [r["id"] for r in rows]
+    man = {
+        "manifest_id": "JAH-CHIP-MANIFEST",
+        "site": "The Signature Computer Chip Maker and Archive",
+        "site_url": base,
+        "site_number": 20,
+        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "total_designs": n,
+        "generated_designs": n,
+        "archived_designs": n,
+        "goal": GOAL,
+        "remaining_to_goal": GOAL - n,
+        "progress": "%d / %d DESIGNS" % (n, GOAL),
+        "families": [{"key": k, "label": FAMLABELS[k], "count": fam_counts[k]} for k in FAMS],
+        "family_count": len(FAMS),
+        "id_scheme": "JAH-CHIP-######",
+        "earliest_id": min(ids) if ids else None,
+        "latest_id": max(ids) if ids else None,
+        "archive_version": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "generator_version": "chipgen-1.0",
+        "engine_version": "1.0",
+        "schema_version": "JAH-CHIP-RECORD/1.0",
+        "index_version": "chip-index-1.0",
+        "index_hash_sha256": idx_hash,
+        "hashes_index": "data/index/chips.hashes.json.gz",
+        "chunks": {"pattern": "data/chunks/cNNNNN.json.gz", "per_chunk": CHUNK_N,
+                   "count": len(chunk_files)},
+        "deep_link": "?chip=JAH-CHIP-000001",
+        "record_status": "SIGNATURE ORIGINAL",
+        "creation_mode": "SIGNATURE-GENERATED",
+        "value_kind": "GENERATED_TARGET",
+        "value_kind_note": "Every numeric specification is a deterministically generated design target from the design seed. None are measured, simulated, manufactured, or tested values.",
+        "completeness_status_vocabulary": ["CONCEPT", "PLANNED", "SPECIFIED", "LOGIC-DESIGNED",
+            "SCHEMATIC", "SIMULATED", "LAYOUT-DESIGNED", "PROTOTYPE", "MANUFACTURED", "TESTED"],
+        "design_status": {
+            "current": "CONCEPT",
+            "definition": "'Fully planned, drawn and specified' means: the architecture is planned (spec table), the board is drawn (generated block-diagram image), and every field of the Chip Record Standard is specified. It does NOT mean fabricated, simulated, or tested.",
+            "sim_status": "NOT_SIMULATED",
+            "test_status": "NOT_TESTED",
+            "mfg_status": "NOT_MANUFACTURED",
+        },
+        "creation_modes": ["SIGNATURE-GENERATED", "USER-CREATED", "SOURCE-DERIVED", "IMPORTED", "REMIXED"],
+        "catalog_feed": "data/chips-catalog.json",
+        "search_index": "data/index/chips.search.json.gz",
+        "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html)",
+        "sitemap_index": "sitemap.xml -> sitemap-core.xml + sitemap-chips-bNNN.xml",
+        "note": "All designs are original Signature-line works. No real manufacturer branding, part numbers, or datasheet text.",
+    }
+    out = os.path.join(ROOT, "chip-archive-manifest.json")
+    json.dump(man, open(out, "w"), indent=1)
+    return out
+
 def build_api(n):
+    man = {}
+    mp = os.path.join(ROOT, "chip-archive-manifest.json")
+    if os.path.exists(mp):
+        man = json.load(open(mp))
     api = {"site": "The Signature Computer Chip Maker and Archive",
            "site_url": "https://justinahiggins614-cmyk.github.io/signature-chip-maker/",
-           "designs_seeded": n, "goal": GOAL,
+           "site_number": 20,
+           "manifest": "chip-archive-manifest.json",
+           "designs_seeded": n, "total_designs": man.get("total_designs", n),
+           "goal": GOAL, "remaining_to_goal": man.get("remaining_to_goal"),
+           "latest_id": man.get("latest_id"), "earliest_id": man.get("earliest_id"),
+           "families": man.get("families"), "family_count": man.get("family_count"),
+           "archive_version": man.get("archive_version"),
+           "generator_version": man.get("generator_version"),
+           "engine_version": man.get("engine_version"),
+           "schema_version": man.get("schema_version"),
+           "index_version": man.get("index_version"),
+           "index_hash_sha256": man.get("index_hash_sha256"),
+           "updated": man.get("updated"),
            "id_scheme": "JAH-CHIP-######", "part_scheme": "SIG-CHIP-#### (Signature-original)",
            "deep_link": "?chip=JAH-CHIP-000001",
            "search_index": "data/index/chips.search.json.gz",
@@ -209,6 +296,8 @@ def build_api(n):
            "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html)",
            "sitemap_index": "sitemap.xml -> sitemap-core.xml + sitemap-chips-bNNN.xml",
            "chunks": "data/chunks/cNNNNN.json.gz (%d/chunk)" % CHUNK_N,
+           "health": {"status": "OK", "last_build": man.get("updated"),
+                      "index_records": n, "index_hash_sha256": man.get("index_hash_sha256")},
            "note": "All designs are original Signature-line works. No real manufacturer branding, part numbers, or datasheet text."}
     json.dump(api, open(os.path.join(ROOT, "api.json"), "w"), indent=1)
 
@@ -220,6 +309,7 @@ def main():
     write_chunks(rows)
     total = rebuild_index()
     urls = build_sitemap()
+    build_manifest(total)
     build_api(total)
     build_catalog(total)
     build_static_catalog(total)

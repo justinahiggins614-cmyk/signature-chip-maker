@@ -181,5 +181,57 @@ function boardSVG(chip){
 }
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
-root.ChipEngine={FAMS:FAMKEYS,FAMDEF:FAMS,renderChip:renderChip,boardSVG:boardSVG,chipName:chipName,esc:esc,RNG:RNG,fmt:fmt,version:ENGVER};
+/* ---- Canonical machine-readable record (JAH-CHIP-RECORD/1.0) ----
+   Every numeric value carries an explicit unit and a value-kind.
+   ALL values are GENERATED_TARGET: deterministically generated design
+   targets from the design seed. None are measured, simulated,
+   manufactured, or tested. Statuses are explicit, never blank. */
+var RECORD_SCHEMA="JAH-CHIP-RECORD/1.0";
+function canonicalRecord(row){
+  var c=renderChip(row);
+  var rp=RNG("pins:"+row.id+":"+row.seed);
+  var pins=c.pins;
+  var gnd=Math.max(4,Math.round(pins*0.15)), pwr=Math.max(2,Math.round(pins*0.12)),
+      clk=Math.max(2,Math.round(pins*0.02)), rsv=Math.floor(rp()*8);
+  var sig=pins-gnd-pwr-clk-rsv;
+  var pinGroups=[
+    {group:"PWR", purpose:"power delivery", count:pwr, voltage_domain:c.voltage, direction:"in"},
+    {group:"GND", purpose:"ground return", count:gnd, voltage_domain:"0 V", direction:"in"},
+    {group:"CLK", purpose:"clock distribution", count:clk, voltage_domain:c.voltage, direction:"in/out"},
+    {group:"SIG", purpose:"signal I/O", count:sig, voltage_domain:"1.8/3.3 V I/O", direction:"in/out"},
+    {group:"RSV", purpose:"reserved / no-connect", count:rsv, voltage_domain:"n/a", direction:"n/a"}
+  ];
+  var specs=[
+    {key:"transistors", label:"Transistor count", value:c.transistors, unit:"count", kind:"GENERATED_TARGET"},
+    {key:"die_area", label:"Die area", value:c.die, unit:"mm²", kind:"GENERATED_TARGET"},
+    {key:"clock", label:"Clock", value:c.clk, unit:"GHz", kind:"GENERATED_TARGET"},
+    {key:"tdp", label:"Power envelope (TDP)", value:c.tdp, unit:"W", kind:"GENERATED_TARGET"},
+    {key:"pins", label:"Pin count", value:c.pins, unit:"count", kind:"GENERATED_TARGET"},
+    {key:"core_voltage", label:"Core voltage", value:parseFloat(c.voltage), unit:"V", kind:"GENERATED_TARGET"},
+    {key:"process_node", label:"Process node class", value:c.node, unit:"nm-class", kind:"GENERATED_TARGET"},
+    {key:"functional_units", label:"Functional units ("+c.unit+")", value:c.units, unit:"count", kind:"GENERATED_TARGET"},
+    {key:"package_dims", label:"Package dimensions", value:c.pkgDims, unit:"mm", kind:"GENERATED_TARGET"}
+  ];
+  c.record_schema=RECORD_SCHEMA;
+  c.record_version="1.0";
+  c.canonical_url="https://justinahiggins614-cmyk.github.io/signature-chip-maker/?chip="+c.id;
+  c.creation_mode="SIGNATURE-GENERATED";
+  c.value_kind="GENERATED_TARGET";
+  c.design_status="CONCEPT";
+  c.sim_status="NOT_SIMULATED";
+  c.test_status="NOT_TESTED";
+  c.mfg_status="NOT_MANUFACTURED";
+  c.completeness_status="CONCEPT";
+  c.specs=specs;
+  c.pin_groups=pinGroups;
+  c.pin_map_note="Functional pin-group map generated from the pin count — NOT a fabrication pinout. Per-pin netlists do not exist for conceptual designs.";
+  c.diagram={kind:"GENERATED_BLOCK_DIAGRAM", version:ENGVER, synced_with:"blocks[]",
+    note:"Deterministic board illustration generated from the same block data as the spec table. It is a block diagram, not a schematic and not a fabrication drawing."};
+  c.parent_chip_id=null;
+  c.derived_from=null;
+  c.lineage_note="Standalone Signature-original design. No parent chip; no real manufacturer's part is referenced.";
+  return c;
+}
+
+root.ChipEngine={FAMS:FAMKEYS,FAMDEF:FAMS,renderChip:renderChip,canonicalRecord:canonicalRecord,boardSVG:boardSVG,chipName:chipName,esc:esc,RNG:RNG,fmt:fmt,version:ENGVER,recordSchema:RECORD_SCHEMA};
 })(typeof window!=="undefined"?window:(typeof module!=="undefined"?module.exports:{}));

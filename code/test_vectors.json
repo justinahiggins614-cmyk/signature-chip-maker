@@ -1,0 +1,42 @@
+{
+ "engine_version": "1.0",
+ "record_schema": "JAH-CHIP-RECORD/1.0",
+ "generated_utc": "2026-10-03",
+ "vectors": [
+  {
+   "id": "JAH-CHIP-000001",
+   "seed": 303911401,
+   "engine_version": "1.0",
+   "expected_hash_sha256": "67eb388bf1f2c6dc926ade98e8f2e01d4621fedf201b398eb719271d77349e9f",
+   "note": "same seed + same engine version must reproduce this exact hash"
+  },
+  {
+   "id": "JAH-CHIP-000002",
+   "seed": 1162497940,
+   "engine_version": "1.0",
+   "expected_hash_sha256": "4b98c5f26c80f0f1e24fa0a6272afd693cb15bbe812454ed287e6aa4b973216b",
+   "note": "same seed + same engine version must reproduce this exact hash"
+  },
+  {
+   "id": "JAH-CHIP-000003",
+   "seed": 1504029501,
+   "engine_version": "1.0",
+   "expected_hash_sha256": "4f5552757954c8a502c3c9cd9c8a28d5f8b4fc3d71347a2cb4419723ffb66009",
+   "note": "same seed + same engine version must reproduce this exact hash"
+  },
+  {
+   "id": "JAH-CHIP-005801",
+   "seed": 1881651732,
+   "engine_version": "1.0",
+   "expected_hash_sha256": "f6adde72ffe46b5e4854d4ce18406e1bcd87a18f7c7e7b9da88c145bdf3e854c",
+   "note": "same seed + same engine version must reproduce this exact hash"
+  },
+  {
+   "id": "JAH-CHIP-011600",
+   "seed": 397578567,
+   "engine_version": "1.0",
+   "expected_hash_sha256": "1a9ba77004da342bd32163728739d5e3b7345dc1829b6c93e573db80e09adb6e",
+   "note": "same seed + same engine version must reproduce this exact hash"
+  }
+ ]
+}

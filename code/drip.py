@@ -28,6 +28,12 @@ r = sh("node --check engine.js && echo JSOK")
 if "JSOK" not in r.stdout:
     print("engine.js syntax FAIL"); sys.exit(1)
 
+# per-design content hashes (deterministic) — must rebuild after new designs
+r = sh("node code/build_hashes.js")
+print(r.stdout.strip() or r.stderr.strip())
+if r.returncode != 0:
+    print("hash build FAIL"); sys.exit(1)
+
 import json
 n = sum(1 for _ in open(os.devnull))  # placeholder
 # count from search index
