@@ -39,6 +39,30 @@ var SUBSTRATES=["monocrystalline silicon","silicon-on-insulator","gallium nitrid
 var METALS=["copper dual-damascene interconnect","cobalt-capped copper","ruthenium liners","tungsten vias"];
 var DIEL=["low-k organosilicate glass","silicon carbonitride caps","air-gap isolation (projected nodes)"];
 var PKGS=["SIG-BGA","SIG-LGA","SIG-QFN","SIG-WLCSP","SIG-EMIB-2.5D","SIG-CoWoS-3D"];
+/* GEMINI #20 FIXES: per-design electrical, interface and status data (deterministic, seeded). */
+var VOLTS={Historic:["5.0 V","3.3 V","2.5 V","1.8 V"],Modern:["1.2 V","1.0 V","0.9 V","0.8 V"],Projected:["0.75 V","0.7 V","0.65 V","0.6 V"]};
+var IOSETS={
+CPU:["PCIe 5.0 x16","DDR5-5600 x2","USB4","2x 10GbE","SPI flash","JTAG","64x GPIO"],
+GPU:["PCIe 5.0 x16","HBM3 x4","DisplayPort 2.1 x4","NVLink-class die link","JTAG"],
+NPU:["PCIe 4.0 x8","LPDDR5X","MIPI CSI-2 x4","I2C control","JTAG"],
+SOC:["PCIe 4.0 x4","LPDDR5","USB 3.2 x2","MIPI DSI/CSI","Wi-Fi/BT radio IF","40x GPIO"],
+MCU:["SPI","I2C x2","UART x3","CAN-FD","12-bit ADC x16","32x GPIO","SWD debug"],
+FPGA:["PCIe 4.0 x8","DDR4 x2","QSFP28 x4","JTAG","user I/O bank x240"],
+MEMC:["DDR5-6400 x4","HBM3 x2","CXL 2.0","JTAG"],
+SENSOR:["MIPI CSI-2 x4","I2C","SPI","parallel pixel bus"],
+PMIC:["PMBus","I2C","power-good outputs","enable inputs"],
+QCTRL:["cryo microwave lines","baseband AWG IF","SPI readout","room-temp JTAG"],
+PHOT:["optical fiber array x8","PCIe 4.0 x8","I2C","JTAG"],
+NEURO:["AER event bus","SPI","I2C","32x GPIO"],
+DSP:["I2S x4","TDM audio","SPI","McASP","JTAG"],
+MODEM:["RF front-end IF","PCIe 3.0 x2","USB 2.0","SIM IF","I2C"],
+SEC:["SPI slave","I2C","secure JTAG (fused)","tamper pins"],
+CHIPLET:["UCIe die-to-die x8","PCIe 5.0 x16","sideband I2C","JTAG"]};
+var PROCASSUMP={
+Historic:["Standard-cell library assumed at this node; single-patterning lithography; aluminum/copper backend per era norms. No low-k dielectric modeled."],
+Modern:["Standard-cell library assumed; multi-patterning where the node requires it; low-k dielectric modeled. Assumes a commercial foundry logic process of this class — no fab-specific PDK data used."],
+Projected:["Projected-node design: assumes future lithography capability; all dimensions are targets, not measured silicon. Backside power delivery and stacked-FET assumptions are projections, not verified process data."]};
+var FABREMAIN=["Physical verification (DRC/LVS) against a real foundry PDK","Timing closure and sign-off static timing analysis","Tape-out database (GDSII/OASIS) generation","Silicon bring-up and electrical characterization","Foundry qualification and yield ramp"];
 
 function chipName(idx){var g=Math.floor(idx/6750);return "Signature "+PRE[idx%30]+MID[Math.floor(idx/30)%15]+" "+SUF[Math.floor(idx/450)%15]+(g>0?" G"+g:"");}
 
@@ -60,9 +84,22 @@ function renderChip(row){
   var blocks=makeBlocks(r,row.fam,clk,tdp,pins);
   var arch=archText(row,F,era,node,tr,die,clk,units,tdp);
   var mfg=mfgText(row,era,node,pkg,sub,metal,diel);
+  /* GEMINI #20 FIXES: electrical + interface + honesty fields (all deterministic). */
+  var volt=pick(r,VOLTS[era]);
+  var pkgSide=Math.round((Math.sqrt(die)*1.7+pins/160)*10)/10;
+  var pkgDims=pkgSide.toFixed(1)+" x "+pkgSide.toFixed(1)+" x "+pick(r,["1.2","1.7","2.1","2.6"])+" mm";
+  var ioPool=IOSETS[row.fam]||IOSETS.CPU,io=[],qi;
+  for(qi=0;qi<ioPool.length;qi++){if(r()<0.62)io.push(ioPool[qi]);}
+  if(io.length<3)io=ioPool.slice(0,3);
+  var procAssump=pick(r,PROCASSUMP[era]);
+  var thermAssump=row.fam==="QCTRL"?"Operates at approx 4 K inside a cryostat; room-temperature control assumed at the vacuum feedthrough.":"Junction temperature <= 105 C assumed; heat spreader required above "+Math.round(tdp)+" W; characterized in 25 C still air.";
+  var designOrigin=era==="Historic"?"HISTORIC-CLASS RE-IMAGINING - a Signature-original tribute to a historic chip class. It is NOT the real historical part and carries no real part number.":"SIGNATURE ORIGINAL - an original Signature-line design. No real manufacturer's branding, part numbers, or datasheet text are used.";
+  var designStatus="CONCEPTUAL DESIGN - architecture study, NOT fabrication-ready.";
   return {id:row.id,fam:row.fam,era:era,name:row.name,sigpart:sigpart,label:F.label,unit:F.unit,famdesc:F.desc,
     node:node,transistors:tr,die:die,pins:pins,tdp:tdp,clk:clk,units:units,pkg:pkg,sub:sub,metal:metal,diel:diel,
     isa:isa,arch:arch,mfg:mfg,blocks:blocks,
+    voltage:volt,pkgDims:pkgDims,io:io,procAssump:procAssump,thermAssump:thermAssump,
+    designOrigin:designOrigin,designStatus:designStatus,fabRemain:FABREMAIN,
     lineage:"Signature-line original design drafted by the Signature System. Every Signature chip is an original work: no real manufacturer's branding, part numbers, or datasheet text are used anywhere in this archive."};
 }
 function tdpDec(range){return range[1]<10?2:range[1]<100?1:0;}

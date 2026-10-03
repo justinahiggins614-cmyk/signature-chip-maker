@@ -91,6 +91,18 @@ details.mstats-inline>summary::-webkit-details-marker{display:none}
 .loadline{text-align:center;padding:30px;color:var(--dim)}
 /* SITE20 FIX-6: persistent filter stack (finder + family + A-Z stay on screen) */
 .filterstack{position:sticky;top:0;z-index:65;background:var(--navy);padding:6px 0}
+/* GEMINI #20 FIX-1: featured design spotlight (first-result experience) */
+#spotlight{background:var(--navy2);border:2px solid var(--gold);border-radius:14px;padding:16px;margin:12px 0}
+#spotlight h2{color:var(--gold);margin:4px 0}
+#spotlight .boardwrap{max-width:660px}
+.pill{display:inline-block;border-radius:10px;padding:3px 12px;font-size:12px;font-weight:bold;margin:3px 6px 3px 0}
+.pill.status{background:#3a2a12;border:2px solid var(--gold);color:var(--gold)}
+.pill.origin{background:#0a2a3a;border:2px solid var(--cyan);color:var(--cyan)}
+.fabbox{background:#0a1628;border:1px dashed var(--gold);border-radius:10px;padding:10px 12px;margin:12px 0;font-size:13.5px}
+.fabbox b{color:var(--gold)}
+.fabbox ul{margin:8px 0;padding-left:20px}
+.fabbox li{margin:4px 0}
+.randbtn{background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;min-width:44px}
 </style>
 </head>
 <body>
@@ -104,6 +116,8 @@ details.mstats-inline>summary::-webkit-details-marker{display:none}
 <a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Phone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">Spec Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">PC Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/">Cyber Mega-Mall</a><a href="https://justinahiggins614-cmyk.github.io/signature-university/">Signature University</a><a href="https://justinahiggins614-cmyk.github.io/signature-books/">Book Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-comics/">Comic Store</a><a href="https://justinahiggins614-cmyk.github.io/signature-newspapers/">Global Newspaper Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">3D Print Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-backend/">Mad Scientist Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-boundless-generators/">Boundless Generator Archive</a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/">AI Mix Lab<span class="soonpill">SOON</span></a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-olypics/">AI Olypics<span class="soonpill">SOON</span></a><span class="here">Chip Maker and Archive — YOU ARE HERE</span><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-app-archive/">App Archive<span class="soonpill">SOON</span></a><a class="soon" href="https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/">AI Robot Matcher<span class="soonpill">SOON</span></a><a href="https://justinahiggins614-cmyk.github.io/signature-experiment-solver/">Experiment Solver</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/">Signature AI Pixel</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/">Signature Music Studio</a>
 </nav>
 <main>
+<!-- GEMINI #20 FIX-1: featured design spotlight — a visitor sees a real chip design immediately -->
+<section id="spotlight" aria-label="Featured chip design"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading featured design…</p></div></section>
 <div class="filterstack">
 <div id="finderbar">
 <div style="color:var(--cyan);font-weight:bold;margin-bottom:6px">🔎 CHIP FINDER — describe the chip you need…</div>
@@ -148,6 +162,22 @@ render:function(reset){const rs=UI.rows();if(reset){UI.shown=0;document.getEleme
  g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div></div>').join(""));
  document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";},
 more:function(){UI.render(false);},
+/* GEMINI #20 FIX-1: featured design spotlight — full chip rendered on first paint */
+spotlight:async function(){
+ const box=document.getElementById("spotlight");if(!box)return;
+ let feat=null;for(let i=0;i<DB.rows.length;i++){if(DB.rows[i][3]==="Modern"){feat=DB.rows[i];break;}}
+ if(!feat)feat=DB.rows[0];if(!feat){box.style.display="none";return;}
+ const row=await loadRow(feat[0]);if(!row){box.style.display="none";return;}
+ const E=window.ChipEngine,c=E.renderChip(row);
+ let h='<div style="color:var(--gold);font-weight:bold">★ FEATURED DESIGN — a real chip design, right now</div>';
+ h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era</div>';
+ h+='<div style="margin:6px 0"><span class="pill status">CONCEPTUAL DESIGN</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
+ h+='<div class="boardwrap">'+E.boardSVG(c)+'</div>';
+ h+='<p>'+esc(c.famdesc)+' <b>Process:</b> '+esc(c.node)+' · <b>Transistors:</b> '+E.fmt(c.transistors)+' · <b>Power:</b> '+c.tdp+' W · <b>Core voltage:</b> '+esc(c.voltage)+'</p>';
+ h+='<div class="toolbar"><button onclick="location.search=\'?chip='+c.id+'\'" style="font-weight:bold">Open the full spec →</button><button class="randbtn" onclick="UI.random()">🎲 Surprise me — random design</button></div>';
+ box.innerHTML=h;
+},
+random:function(){if(!DB.rows.length)return;const r=DB.rows[Math.floor(Math.random()*DB.rows.length)];location.search="?chip="+r[0];},
 open:function(id){location.search="?chip="+id;}
 };
 /* ---------- chip detail ---------- */
@@ -165,14 +195,21 @@ async function openChip(id){
  const pcQ=encodeURIComponent(row.name.replace(/^Signature /,"").split(" ")[0]+" chip");
  let h='<span class="backlink" onclick="chipBack()">← back to archive</span>';
  h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era · Signature part '+esc(c.sigpart)+'</div>';
+ /* GEMINI #20 FIX-3/FIX-5: design status + origin badges, impossible to miss */
+ h+='<div style="margin:8px 0"><span class="pill status">CONCEPTUAL DESIGN — not fabrication-ready</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
  h+='<div class="toolbar"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button></div>';
  h+='<table class="spectable">';
- const rows=[["Architecture",c.arch],["Process node",c.node+" — "+c.sub],["Transistors",E.fmt(c.transistors)],["Die size",c.die+" mm²"],["Package",c.pkg+" · "+c.pins+" pins"],["Clock",c.clk+" GHz"],[F.unitLabel||c.unit,c.units], ["Power envelope",c.tdp+" W TDP"],["Instruction set",c.isa],["Interconnect",c.metal],["Dielectric",c.diel],["Manufacturing",c.mfg],["Lineage",c.lineage]];
+ /* GEMINI #20 FIX-2: every result shows purpose, architecture, inputs, outputs, voltage, package,
+    dimensions, process assumptions, thermal assumptions, interfaces, block diagram, status */
+ const rows=[["Purpose",c.famdesc],["Architecture",c.arch],["Process node",c.node+" — "+c.sub],["Transistors",E.fmt(c.transistors)],["Die size",c.die+" mm²"],["Package",c.pkg+" · "+c.pins+" pins"],["Package dimensions",c.pkgDims],["Core voltage",c.voltage],["Clock",c.clk+" GHz"],[F.unitLabel||c.unit,c.units], ["Power envelope",c.tdp+" W TDP"],["External interfaces",c.io.join(", ")],["Instruction set",c.isa],["Interconnect",c.metal],["Dielectric",c.diel],["Process assumptions",c.procAssump],["Thermal assumptions",c.thermAssump],["Manufacturing",c.mfg],["Lineage",c.lineage]];
  rows.forEach(x=>{h+='<tr><td class="k">'+esc(x[0])+'</td><td>'+esc(x[1])+'</td></tr>';});
  h+='</table>';
- h+='<h3 style="color:var(--gold)">Completed circuit board — '+esc(c.sigpart)+'</h3>';
+ h+='<h3 style="color:var(--gold)">Block diagram — completed circuit board '+esc(c.sigpart)+'</h3>';
  h+='<div class="boardwrap">'+E.boardSVG(c)+'</div>';
  h+='<ol class="seclist">'+c.blocks.map(b=>'<li><b>'+b.n+' · '+esc(b.name)+'</b> — '+esc(b.desc)+'</li>').join("")+'</ol>';
+ /* GEMINI #20 FIX-3: fabrication readiness — what remains before real silicon */
+ h+='<div class="fabbox"><b>🔧 Fabrication readiness</b><br>This design is a <b>CONCEPTUAL architecture study</b>. It cannot be fabricated directly from this page. What remains to be supplied before real silicon:<ul>'+c.fabRemain.map(function(f){return '<li>'+esc(f)+'</li>';}).join("")+'</ul></div>';
+ h+='<div class="xlink">🏷 <b>Design origin:</b> '+esc(c.designOrigin)+'</div>';
  h+='<div id="qa"><div style="color:var(--cyan);font-weight:bold">🤖 AI HELPER — ask about this design</div><div id="qalog"><div class="a">'+esc(chipGreet(c))+'</div></div><input id="qain" placeholder="e.g. what process node is it? how much power does it use?" aria-label="Ask about this design" onkeydown="if(event.key===\'Enter\')QA.ask()"></div>';
  h+='<div class="xlink">🔗 <b>Related elsewhere on the network:</b> <a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/?q='+pcQ+'">find systems using this chip class in the PC Depository →</a> · <a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">print this board as a keepsake emblem in the 3D Print Depository →</a></div>';
  v.innerHTML=h;
@@ -190,7 +227,12 @@ async function openChip(id){
    {"@type":"PropertyValue","name":"Transistors","value":String(c.transistors)},
    {"@type":"PropertyValue","name":"Die size","value":c.die+" mm²"},
    {"@type":"PropertyValue","name":"Clock","value":c.clk+" GHz"},
-   {"@type":"PropertyValue","name":"Package","value":c.pkg+" · "+c.pins+" pins"}]};
+   {"@type":"PropertyValue","name":"Package","value":c.pkg+" · "+c.pins+" pins"},
+   {"@type":"PropertyValue","name":"Core voltage","value":c.voltage},
+   {"@type":"PropertyValue","name":"Package dimensions","value":c.pkgDims},
+   {"@type":"PropertyValue","name":"External interfaces","value":c.io.join(", ")},
+   {"@type":"PropertyValue","name":"Design status","value":"Conceptual design — not fabrication-ready"},
+   {"@type":"PropertyValue","name":"Design origin","value":c.designOrigin.split(" - ")[0]}]};
  const sp=document.createElement("script");sp.type="application/ld+json";sp.textContent=JSON.stringify(prod);document.head.appendChild(sp);
  document.title=c.name+" — The Signature Computer Chip Maker and Archive";
 }
@@ -198,7 +240,7 @@ UI.copyChip=function(){const c=window._chip;if(!c)return;const t=chipText(c);nav
 UI.dlTxt=function(){const c=window._chip;if(!c)return;dl(c.id+".txt",chipText(c),"text/plain");};
 UI.dlJson=function(){const c=window._chip;if(!c)return;dl(c.id+".json",JSON.stringify(c,null,1),"application/json");};
 function dl(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();}
-function chipText(c){let t=c.name+" ("+c.id+")\n"+c.label+" · "+c.era+" era · "+c.sigpart+"\n\nARCHITECTURE\n"+c.arch+"\n\nSPEC\nProcess: "+c.node+"\nTransistors: "+c.transistors+"\nDie: "+c.die+" mm²\nPackage: "+c.pkg+" ("+c.pins+" pins)\nClock: "+c.clk+" GHz\n"+c.unit+": "+c.units+"\nTDP: "+c.tdp+" W\nISA: "+c.isa+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n";return t;}
+function chipText(c){let t=c.name+" ("+c.id+")\n"+c.label+" · "+c.era+" era · "+c.sigpart+"\n"+c.designStatus+"\n"+c.designOrigin+"\n\nPURPOSE\n"+c.famdesc+"\n\nARCHITECTURE\n"+c.arch+"\n\nSPEC\nProcess: "+c.node+"\nTransistors: "+c.transistors+"\nDie: "+c.die+" mm²\nPackage: "+c.pkg+" ("+c.pins+" pins)\nPackage dimensions: "+c.pkgDims+"\nCore voltage: "+c.voltage+"\nClock: "+c.clk+" GHz\n"+c.unit+": "+c.units+"\nTDP: "+c.tdp+" W\nISA: "+c.isa+"\nExternal interfaces: "+c.io.join(", ")+"\n\nPROCESS ASSUMPTIONS\n"+c.procAssump+"\n\nTHERMAL ASSUMPTIONS\n"+c.thermAssump+"\n\nFABRICATION READINESS\n"+c.designStatus+"\nWhat remains before real silicon:\n- "+c.fabRemain.join("\n- ")+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n";return t;}
 /* ---------- tiered TTS: ResponsiveVoice audio -> 2x Google TTS, audio-element playback ---------- */
 var RD={audio:null,queue:[],playing:false,stopped:true,timer:null,total:0};
 var RD_TIERS=[
@@ -264,6 +306,10 @@ answerRaw:function(c,q){q=q.toLowerCase();
  if(has("material","silicon","copper","substrate"))return "Substrate: "+c.sub+". Interconnect: "+c.metal+". Dielectric: "+c.diel+".";
  if(has("isa","instruction"))return c.isa+".";
  if(has("board","section","layout","svg"))return "The board has 8 labeled sections: "+c.blocks.map(b=>b.n+" "+b.name).join(", ")+". Each is described under the board image.";
+ if(has("volt"))return "Core voltage is "+c.voltage+" (I/O at 1.8/3.3 V).";
+ if(has("interface","input","output","pcie","usb","port"))return "External interfaces: "+c.io.join(", ")+".";
+ if(has("fabricat","tape","gdsii","silicon","concept","build it","make it","real chip"))return "This is a conceptual design study — not fabrication-ready. Before real silicon you would still need: "+c.fabRemain.join("; ")+".";
+ if(has("historic","historical","original","reference","tribute"))return c.designOrigin;
  if(has("security","secure"))return "The S7 security enclave holds the root of trust: secure boot, key storage and crypto accelerators, fenced from the main cores.";
  if(has("made","real","intel","amd","nvidia","manufacturer"))return "This is a Signature-line original design — no real manufacturer's branding, part numbers, or datasheet text are used. "+c.lineage;
  if(has("what is","about","describe","summary"))return c.arch;
@@ -295,7 +341,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
  try{await loadIndex();}catch(e){document.getElementById("livecount").textContent="1,600";}
  const id=qp("chip");
  if(id&&/^JAH-CHIP-\d{6}$/.test(id)){await openChip(id);}
- else{UI.init();}
+ else{try{await UI.spotlight();}catch(e){const b=document.getElementById("spotlight");if(b)b.style.display="none";}UI.init();}
 });
 </script>
 </body>
