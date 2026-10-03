@@ -34,6 +34,8 @@ SEC:{label:"Signature Security Enclave",unit:"crypto engines",desc:"Hardware roo
 CHIPLET:{label:"Signature Chiplet Interconnect",unit:"die links",desc:"High-speed die-to-die fabric stitching chiplets into one package.",nodes:{Historic:["130nm","90nm","65nm"],Modern:["45nm","32nm","28nm","16nm"],Projected:["10nm","7nm"]},tr:[5e7,8e9],die:[30,300],pins:[256,4096],tdp:[2,90],clk:[0.5,8.0],units:[2,64]}
 };
 var FAMKEYS=Object.keys(FAMS);
+/* Consistency pass: engine version stamped on every rendered record's provenance line. */
+var ENGVER="1.0";
 
 var SUBSTRATES=["monocrystalline silicon","silicon-on-insulator","gallium nitride on silicon","silicon carbide","strained silicon germanium"];
 var METALS=["copper dual-damascene interconnect","cobalt-capped copper","ruthenium liners","tungsten vias"];
@@ -99,7 +101,7 @@ function renderChip(row){
     node:node,transistors:tr,die:die,pins:pins,tdp:tdp,clk:clk,units:units,pkg:pkg,sub:sub,metal:metal,diel:diel,
     isa:isa,arch:arch,mfg:mfg,blocks:blocks,
     voltage:volt,pkgDims:pkgDims,io:io,procAssump:procAssump,thermAssump:thermAssump,
-    designOrigin:designOrigin,designStatus:designStatus,fabRemain:FABREMAIN,
+    designOrigin:designOrigin,designStatus:designStatus,fabRemain:FABREMAIN,seed:row.seed,engineVer:ENGVER,
     lineage:"Signature-line original design drafted by the Signature System. Every Signature chip is an original work: no real manufacturer's branding, part numbers, or datasheet text are used anywhere in this archive."};
 }
 function tdpDec(range){return range[1]<10?2:range[1]<100?1:0;}
@@ -179,5 +181,5 @@ function boardSVG(chip){
 }
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
-root.ChipEngine={FAMS:FAMKEYS,FAMDEF:FAMS,renderChip:renderChip,boardSVG:boardSVG,chipName:chipName,esc:esc,RNG:RNG,fmt:fmt};
+root.ChipEngine={FAMS:FAMKEYS,FAMDEF:FAMS,renderChip:renderChip,boardSVG:boardSVG,chipName:chipName,esc:esc,RNG:RNG,fmt:fmt,version:ENGVER};
 })(typeof window!=="undefined"?window:(typeof module!=="undefined"?module.exports:{}));

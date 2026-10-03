@@ -103,11 +103,27 @@ details.mstats-inline>summary::-webkit-details-marker{display:none}
 .fabbox ul{margin:8px 0;padding-left:20px}
 .fabbox li{margin:4px 0}
 .randbtn{background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;min-width:44px}
+/* CONSISTENCY PASS (network-wide 10-fix): shared record kit, styling-neutral */
+.sitekicker{font-size:11px;letter-spacing:.28em;color:var(--dim);margin:0 0 6px}
+.sitekicker b{color:var(--gold);font-weight:700}
+.reclbl{font-size:10.5px;letter-spacing:.22em;color:var(--dim);margin-right:8px}
+.recbadge{display:inline-block;border:2px solid var(--gold);background:#3a2a12;color:var(--gold);border-radius:10px;padding:3px 12px;font-size:12px;font-weight:bold;letter-spacing:.06em;margin:3px 6px 3px 0}
+.recbadge.mini{font-size:10px;padding:1px 8px;border-width:1px;margin:0 0 5px}
+.provline{font-size:12px;color:var(--dim);margin:8px 0}
+.provline b{color:var(--cyan);font-weight:400}
+.recbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.recbar button{background:var(--navy2);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:9px 14px;cursor:pointer;font-family:inherit;font-size:13px;min-height:44px}
+.recbar button:hover{background:var(--cyan);color:var(--navy2)}
+.recinfo{background:#081426;border:1px dashed var(--copper);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:13px;display:none}
+.aicard{background:#081426;border:1px solid var(--cyan);border-radius:10px;padding:10px 12px;margin:14px 0;font-size:13px}
+.aicard .aname{color:var(--cyan);font-weight:bold}
+.aicard .duties{color:var(--dim)}
 </style>
 </head>
 <body>
 <div id="scrim" aria-hidden="true"></div>
 <header class="brand">
+<div class="sitekicker"><b>SITE 20 OF 25</b> · THE JAH NETWORK</div>
 <h1>⚙ THE SIGNATURE COMPUTER CHIP MAKER AND ARCHIVE</h1>
 <p>Original Signature-line chip designs — every chip type ever made or projected, fully planned, drawn and specified.</p>
 <details class="mstats-inline" open><summary>Site statistics</summary><div class="countchip"><span id="livecount">…</span> / 1,000,000 DESIGNS</div></details>
@@ -128,7 +144,7 @@ details.mstats-inline>summary::-webkit-details-marker{display:none}
 <div class="azrow" id="azrow" aria-label="A to Z"></div>
 </div>
 <p class="staticcount">5,600 original Signature chip designs archived as of 2026-10-03 — the live counter above keeps growing.</p>
-<div id="home"><div class="grid" id="grid"></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button></div></div>
+<div id="home"><div class="grid" id="grid"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading chip designs…</p></div></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button></div></div>
 <div id="chipview" style="display:none"></div>
 </main>
 <div id="ttsbar"><span id="ttstext" style="color:var(--dim);font-size:12px"></span><br>
@@ -152,14 +168,14 @@ init:function(){const fr=document.getElementById("famrow");const E=window.ChipEn
  fr.innerHTML='<button data-f="" class="on" onclick="UI.setFam(\'\')">All</button>'+E.FAMS.map(f=>'<button data-f="'+f+'" onclick="UI.setFam(\''+f+'\')">'+esc(E.FAMDEF[f].label.replace("Signature ",""))+'</button>').join("");
  const az=document.getElementById("azrow");let h='<a href="#" data-l="" class="on" onclick="UI.setLetter(\'\');return false">All</a>';
  for(let i=65;i<=90;i++){const L=String.fromCharCode(i);h+='<a href="#" data-l="'+L+'" onclick="UI.setLetter(\''+L+'\');return false">'+L+'</a>';}
- az.innerHTML=h;UI.more();},
+ az.innerHTML=h;var l=document.querySelector("#grid .loadline");if(l)l.parentNode.removeChild(l);UI.more();},
 setFam:function(f){UI.filter=f||null;UI.shown=0;document.querySelectorAll("#famrow button").forEach(b=>b.classList.toggle("on",b.dataset.f===(f||"")));UI.render(true);},
 setLetter:function(l){UI.letter=l||null;UI.shown=0;document.querySelectorAll("#azrow a").forEach(a=>a.classList.toggle("on",a.dataset.l===(l||"")));UI.render(true);},
 rows:function(){return DB.rows.filter(r=>(!UI.filter||r[2]===UI.filter)&&(!UI.letter||r[1].toUpperCase().indexOf("SIGNATURE "+UI.letter)===0));},
 render:function(reset){const rs=UI.rows();if(reset){UI.shown=0;document.getElementById("grid").innerHTML="";}
  const g=document.getElementById("grid");const E=window.ChipEngine;
  const slice=rs.slice(UI.shown,UI.shown+48);UI.shown+=slice.length;
- g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div></div>').join(""));
+ g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="recbadge mini">SIGNATURE ORIGINAL</span><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div></div>').join(""));
  document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";},
 more:function(){UI.render(false);},
 /* GEMINI #20 FIX-1: featured design spotlight — full chip rendered on first paint */
@@ -196,8 +212,12 @@ async function openChip(id){
  let h='<span class="backlink" onclick="chipBack()">← back to archive</span>';
  h+='<h2>'+esc(c.name)+'</h2><div style="color:var(--dim)">'+c.id+' · '+esc(c.label)+' · '+c.era+' era · Signature part '+esc(c.sigpart)+'</div>';
  /* GEMINI #20 FIX-3/FIX-5: design status + origin badges, impossible to miss */
- h+='<div style="margin:8px 0"><span class="pill status">CONCEPTUAL DESIGN — not fabrication-ready</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
- h+='<div class="toolbar"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button></div>';
+ /* CONSISTENCY PASS: canonical record-status badge + provenance line */
+ h+='<div style="margin:8px 0"><span class="reclbl">RECORD STATUS</span><span class="recbadge">SIGNATURE ORIGINAL</span><span class="pill status">CONCEPTUAL DESIGN — not fabrication-ready</span><span class="pill origin">'+esc(c.designOrigin.split(" - ")[0])+'</span></div>';
+ h+='<p class="provline"><b>Provenance:</b> made by ChipEngine v'+esc(c.engineVer||"1.0")+' (deterministic design solver) · design seed '+esc(String(c.seed))+' · record '+esc(c.id)+'</p>';
+ h+='<div class="toolbar" role="group" aria-label="Record panel: copy, download, read aloud"><button onclick="TTS.readChip()">🔊 Read aloud</button><button onclick="UI.copyChip()">⧉ Copy spec</button><button onclick="UI.dlTxt()">⬇ Download .txt</button><button onclick="UI.dlJson()">⬇ Download .json</button></div>';
+ /* CONSISTENCY PASS: record panel — OPEN · SOURCE · ID · VERSION · SHARE (copy/download/read-aloud live in the toolbar above) */
+ h+='<div class="recbar" role="group" aria-label="Record panel: open, source, id, version, share"><span class="reclbl">RECORD</span><button onclick="UI.recOpen()">↗ OPEN</button><button onclick="UI.recSrc()">⇄ SOURCE</button><button onclick="UI.recId()"># ID</button><button onclick="UI.recVer()">⚙ VERSION</button><button onclick="UI.recShare()">⤴ SHARE</button></div><div class="recinfo" id="recinfo"></div>';
  h+='<table class="spectable">';
  /* GEMINI #20 FIX-2: every result shows purpose, architecture, inputs, outputs, voltage, package,
     dimensions, process assumptions, thermal assumptions, interfaces, block diagram, status */
@@ -210,6 +230,7 @@ async function openChip(id){
  /* GEMINI #20 FIX-3: fabrication readiness — what remains before real silicon */
  h+='<div class="fabbox"><b>🔧 Fabrication readiness</b><br>This design is a <b>CONCEPTUAL architecture study</b>. It cannot be fabricated directly from this page. What remains to be supplied before real silicon:<ul>'+c.fabRemain.map(function(f){return '<li>'+esc(f)+'</li>';}).join("")+'</ul></div>';
  h+='<div class="xlink">🏷 <b>Design origin:</b> '+esc(c.designOrigin)+'</div>';
+ h+='<div class="aicard"><span class="aname">🤖 Chip Helper — AI identity</span><br><span class="duties">This design\u2019s personal AI assistant. <b>Duties:</b> answers from this design\u2019s spec sheet only — process node, power, pins, transistors, clock, materials, board sections, lineage. <b>Engine:</b> data-grounded spec-sheet matcher with the JAHtalk conversational module — talks human, never invents beyond the record.</span></div>';
  h+='<div id="qa"><div style="color:var(--cyan);font-weight:bold">🤖 AI HELPER — ask about this design</div><div id="qalog"><div class="a">'+esc(chipGreet(c))+'</div></div><input id="qain" placeholder="e.g. what process node is it? how much power does it use?" aria-label="Ask about this design" onkeydown="if(event.key===\'Enter\')QA.ask()"></div>';
  h+='<div class="xlink">🔗 <b>Related elsewhere on the network:</b> <a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/?q='+pcQ+'">find systems using this chip class in the PC Depository →</a> · <a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">print this board as a keepsake emblem in the 3D Print Depository →</a></div>';
  v.innerHTML=h;
@@ -239,6 +260,23 @@ async function openChip(id){
 UI.copyChip=function(){const c=window._chip;if(!c)return;const t=chipText(c);navigator.clipboard.writeText(t).then(()=>alert("Spec copied."),()=>alert("Copy blocked by browser."));};
 UI.dlTxt=function(){const c=window._chip;if(!c)return;dl(c.id+".txt",chipText(c),"text/plain");};
 UI.dlJson=function(){const c=window._chip;if(!c)return;dl(c.id+".json",JSON.stringify(c,null,1),"application/json");};
+/* CONSISTENCY PASS: record-panel actions (ES5-safe) */
+function recInfoBox(){return document.getElementById("recinfo");}
+function recInfoShow(html){const b=recInfoBox();if(!b)return;b.style.display="block";b.innerHTML=html;}
+UI.recDeep=function(){const c=window._chip;return c?(location.origin+location.pathname+"?chip="+c.id):location.href;};
+UI.recOpen=function(){const u=UI.recDeep();window.open(u,"_blank","noopener");};
+UI.recSrc=function(){const c=window._chip;if(!c)return;const b=recInfoBox();
+ if(b.style.display==="block"&&b.dataset.kind==="src"){b.style.display="none";b.dataset.kind="";return;}
+ recInfoShow("<b>SOURCE</b> — "+esc(c.designOrigin)+"<br><br>"+esc(c.lineage));b.dataset.kind="src";};
+UI.recId=function(){const c=window._chip;if(!c)return;const b=recInfoBox();
+ recInfoShow("<b>ID</b> — "+esc(c.id)+" · Signature part "+esc(c.sigpart));b.dataset.kind="id";
+ if(navigator.clipboard)navigator.clipboard.writeText(c.id).catch(function(){});};
+UI.recVer=function(){const c=window._chip;if(!c)return;const b=recInfoBox();
+ recInfoShow("<b>VERSION</b> — ChipEngine v"+esc(c.engineVer||"1.0")+" · JAH-CHIP record schema v1 · this record is rendered deterministically from seed "+esc(String(c.seed))+"; the same seed always yields this exact design.");b.dataset.kind="ver";};
+UI.recShare=function(){const u=UI.recDeep();const b=recInfoBox();
+ if(navigator.share){navigator.share({title:document.title,url:u}).catch(function(){});return;}
+ if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){recInfoShow("<b>SHARE</b> — record link copied: "+esc(u));b.dataset.kind="share";},function(){recInfoShow("<b>SHARE</b> — record link: "+esc(u));b.dataset.kind="share";});}
+ else{recInfoShow("<b>SHARE</b> — record link: "+esc(u));b.dataset.kind="share";}};
 function dl(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();}
 function chipText(c){let t=c.name+" ("+c.id+")\n"+c.label+" · "+c.era+" era · "+c.sigpart+"\n"+c.designStatus+"\n"+c.designOrigin+"\n\nPURPOSE\n"+c.famdesc+"\n\nARCHITECTURE\n"+c.arch+"\n\nSPEC\nProcess: "+c.node+"\nTransistors: "+c.transistors+"\nDie: "+c.die+" mm²\nPackage: "+c.pkg+" ("+c.pins+" pins)\nPackage dimensions: "+c.pkgDims+"\nCore voltage: "+c.voltage+"\nClock: "+c.clk+" GHz\n"+c.unit+": "+c.units+"\nTDP: "+c.tdp+" W\nISA: "+c.isa+"\nExternal interfaces: "+c.io.join(", ")+"\n\nPROCESS ASSUMPTIONS\n"+c.procAssump+"\n\nTHERMAL ASSUMPTIONS\n"+c.thermAssump+"\n\nFABRICATION READINESS\n"+c.designStatus+"\nWhat remains before real silicon:\n- "+c.fabRemain.join("\n- ")+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n";return t;}
 /* ---------- tiered TTS: ResponsiveVoice audio -> 2x Google TTS, audio-element playback ---------- */

@@ -154,12 +154,17 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
     css = ("<style>body{background:#0a1628;color:#cfe8ff;font-family:ui-monospace,Menlo,Consolas,monospace;"
            "margin:0;padding:18px}a{color:#4fd8e8}h1{color:#e8b34b}table{border-collapse:collapse;"
            "width:100%%;font-size:13px}td,th{border-bottom:1px solid #1d3a5f;padding:6px 8px;text-align:left}"
-           "th{color:#e8b34b}.fam{margin:6px 0}</style>")
+           "th{color:#e8b34b}.fam{margin:6px 0}"
+           ".sitekicker{font-size:11px;letter-spacing:.28em;color:#7fa8c9}"
+           ".recbadge{display:inline-block;border:2px solid #e8b34b;background:#3a2a12;color:#e8b34b;"
+           "border-radius:10px;padding:2px 10px;font-size:11px;font-weight:bold;letter-spacing:.06em}</style>")
     head = ("<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
             "<meta name='viewport' content='width=device-width,initial-scale=1'>")
     # index page
     idx_h = head + "<title>Chip design index — The Signature Computer Chip Maker and Archive</title></head><body>" + css
+    idx_h += "<p class='sitekicker'><b>SITE 20 OF 25</b> &middot; THE JAH NETWORK</p>"
     idx_h += "<h1>Chip design index</h1><p>%s original Signature chip designs, by family. " % format(n, ",d")
+    idx_h += "Every design below carries record status <span class='recbadge'>SIGNATURE ORIGINAL</span>. "
     idx_h += "<a href='%s'>Back to the live archive</a></p>" % base
     for k in FAMS:
         cnt = sum(1 for r in rows if r["fam"] == k)
@@ -172,13 +177,14 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
         trs = []
         for r in fam_rows:
             summary = "%s era %s" % (r["era"], FAMLABELS[k].replace("Signature ", ""))
-            trs.append("<tr><td><a href='%s?chip=%s'>%s</a></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+            trs.append("<tr><td><a href='%s?chip=%s'>%s</a></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td><span class='recbadge'>SIGNATURE ORIGINAL</span></td></tr>"
                        % (base, r["id"], r["id"], html.escape(r["name"]),
                           html.escape(FAMLABELS[k]), r["era"], html.escape(summary)))
         page = (head + "<title>%s designs — The Signature Computer Chip Maker and Archive</title></head><body>" % FAMLABELS[k] + css
+                + "<p class='sitekicker'><b>SITE 20 OF 25</b> &middot; THE JAH NETWORK</p>"
                 + "<h1>%s</h1><p>%s designs. <a href='chips.html'>All families</a> · <a href='%s'>Live archive</a></p>"
                 % (FAMLABELS[k], format(len(fam_rows), ",d"), base)
-                + "<table><tr><th>ID</th><th>Name</th><th>Type</th><th>Era</th><th>Summary</th></tr>"
+                + "<table><tr><th>ID</th><th>Name</th><th>Type</th><th>Era</th><th>Summary</th><th>Record status</th></tr>"
                 + "".join(trs) + "</table></body></html>")
         open(os.path.join(ROOT, "chips-fam-%s.html" % k), "w").write(page)
     # re-stamp the static count line in index.html so bots see a fresh number
