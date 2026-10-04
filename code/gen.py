@@ -284,7 +284,7 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
             "<meta name='viewport' content='width=device-width,initial-scale=1'>")
     # index page
     idx_h = head + "<title>Chip design index — The Signature Computer Chip Maker and Archive</title></head><body>" + css
-    idx_h += "<p class='sitekicker'><b>SITE 18 OF 27</b> &middot; THE JAH NETWORK</p>"
+    idx_h += "<p class='sitekicker'><b>SITE 18 OF 31</b> &middot; THE JAH NETWORK</p>"
     idx_h += "<h1>Chip design index</h1><p>%s original Signature chip designs, by family. " % format(n, ",d")
     idx_h += "Every design below carries record status <span class='recbadge'>SIGNATURE ORIGINAL</span>. "
     idx_h += "<a href='%s'>Back to the live archive</a></p>" % base
@@ -305,7 +305,7 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
                        % (base, r["id"], r["id"], html.escape(r["name"]),
                           html.escape(FAMLABELS[k]), r["era"], html.escape(summary)))
         page = (head + "<title>%s designs — The Signature Computer Chip Maker and Archive</title></head><body>" % FAMLABELS[k] + css
-                + "<p class='sitekicker'><b>SITE 18 OF 27</b> &middot; THE JAH NETWORK</p>"
+                + "<p class='sitekicker'><b>SITE 18 OF 31</b> &middot; THE JAH NETWORK</p>"
                 + "<h1>%s</h1><p>%s designs. <a href='chips.html'>All families</a> · <a href='%s'>Live archive</a></p>"
                 % (FAMLABELS[k], format(len(fam_rows), ",d"), base)
                 + TABBAR_CHIP
