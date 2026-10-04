@@ -168,6 +168,21 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 <details class="mstats-inline" open><summary>Site statistics</summary><div class="countchip"><span id="livecount">24,600</span> / 1,000,000 DESIGNS</div></details><br>
 <button type="button" id="jahGuideBtn" aria-label="Open the how-to-use guide">? Guide</button>
 </header>
+<!-- JAH TAB BAR — Manon's 2026-10-04 order (calculator screenshot as spec).
+     Paste right after </header> (or after the hero/title block) on index.html AND on the archive page.
+     On index.html: "Front Door" carries class "on". On the archive page: "1 Million Archive" carries "on".
+     Replace <a class="jtab" href="browse.html">Browse</a><a class="jtab" href="methodology.html">Methodology</a> with <a class="jtab" href="...">Label</a> items (may be empty). -->
+<style>
+.jtabbar{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;border-bottom:1px solid rgba(128,128,128,.25)}
+.jtabbar a.jtab{flex:0 0 auto;text-decoration:none;border:1px solid rgba(160,160,160,.45);border-radius:999px;padding:9px 16px;font-size:.92em;color:inherit;background:rgba(127,127,127,.08);white-space:nowrap;font-family:inherit}
+.jtabbar a.jtab.on{background:#f5c518;border-color:#f5c518;color:#191919;font-weight:700}
+</style>
+<nav class="jtabbar" aria-label="Site sections">
+<a class="jtab on" href="index.html">🏠 Front Door</a>
+<a class="jtab" href="chips.html">📚 1 Million Archive</a>
+<a class="jtab" href="browse.html">Browse</a><a class="jtab" href="methodology.html">Methodology</a>
+</nav>
+
 
 <main>
 <!-- GEMINI #20 FIX-1: featured design spotlight — a visitor sees a real chip design immediately -->
