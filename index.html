@@ -401,6 +401,33 @@ c.specs.forEach(s=>{t+=s.label+": "+s.value+" "+s.unit+" ["+s.kind+"]\n";});
 t+="\nExternal interfaces: "+c.io.join(", ")+"\n\nPIN GROUPS (functional map — NOT a fabrication pinout)\n";
 c.pin_groups.forEach(g=>{t+=g.group+": "+g.count+" pins · "+g.purpose+" · "+g.voltage_domain+"\n";});
 t+="\nPROCESS ASSUMPTIONS\n"+c.procAssump+"\n\nTHERMAL ASSUMPTIONS\n"+c.thermAssump+"\n\nFABRICATION READINESS\n"+c.designStatus+"\nWhat remains before real silicon:\n- "+c.fabRemain.join("\n- ")+"\n\nMATERIALS\n"+c.sub+"; "+c.metal+"; "+c.diel+"\n\nMANUFACTURING\n"+c.mfg+"\n\nBOARD SECTIONS\n";c.blocks.forEach(b=>{t+=b.n+" "+b.name+": "+b.desc+"\n";});t+="\n"+c.lineage+"\n\nENGINEERING DISCLAIMER\nGenerated design specification. Not safety-certified, not manufacturable as-is, not electrically compliant until real verification. High-voltage/high-power concepts require professional review.\n";return t;}
+/* ==== JAH global read-aloud controller (one per page): no stacked voices, no orphan audio ==== */
+(function(){
+if(window.__JAHREAD)return;
+var R={audios:[],lastTap:0,lastLabel:""};
+R.stopAll=function(){
+ try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
+ try{if(window.responsiveVoice&&window.responsiveVoice.cancel)window.responsiveVoice.cancel();}catch(e){}
+ var i,a;
+ for(i=0;i<R.audios.length;i++){a=R.audios[i];try{a.pause();}catch(e){}try{a.removeAttribute("src");}catch(e){}try{a.load();}catch(e){}}
+ R.audios.length=0;
+ var els=document.querySelectorAll("audio");
+ for(i=0;i<els.length;i++){try{els[i].pause();}catch(e){}try{els[i].removeAttribute("src");}catch(e){}try{els[i].load();}catch(e){}}
+};
+R.reg=function(a){if(a&&R.audios.indexOf(a)<0)R.audios.push(a);return a;};
+R.playGuard=function(label){
+ var now=Date.now();
+ if(now-R.lastTap<450&&label===R.lastLabel){R.lastTap=0;R.lastLabel="";R.stopAll();return false;}
+ R.lastTap=now;R.lastLabel=String(label||"");
+ R.stopAll();return true;
+};
+try{
+ var NativeAudio=window.Audio;
+ window.Audio=function(src){var a=src===undefined?new NativeAudio():new NativeAudio(src);R.reg(a);return a;};
+ window.Audio.prototype=NativeAudio.prototype;
+}catch(e){}
+window.__JAHREAD=R;
+})();
 /* ---------- tiered TTS: ResponsiveVoice audio -> 2x Google TTS, audio-element playback ---------- */
 var RD={audio:null,queue:[],playing:false,stopped:true,timer:null,total:0};
 var RD_TIERS=[
@@ -410,7 +437,7 @@ var RD_TIERS=[
 function rdChunks(t){t=String(t).replace(/\s+/g," ").trim();var out=[],cur="";
  t.split(/(?<=[.!?])\s+/).forEach(function(s){if((cur+" "+s).length>170){if(cur)out.push(cur);cur=s;}else cur=(cur?cur+" ":"")+s;});
  if(cur)out.push(cur);return out.slice(0,400);}
-function rdStop(){RD.stopped=true;RD.playing=false;RD.queue=[];if(RD.timer){clearTimeout(RD.timer);RD.timer=null;}if(RD.audio){try{RD.audio.pause();}catch(e){}RD.audio=null;}document.getElementById("ttsbar").style.display="none";}
+function rdStop(){try{if(window.__JAHREAD)window.__JAHREAD.stopAll();}catch(e){}RD.stopped=true;RD.playing=false;RD.queue=[];if(RD.timer){clearTimeout(RD.timer);RD.timer=null;}if(RD.audio){try{RD.audio.pause();}catch(e){}RD.audio=null;}document.getElementById("ttsbar").style.display="none";}
 function rdPlayTier(chunk,tier,done){
  if(tier>=RD_TIERS.length){done(false);return;}
  var url=RD_TIERS[tier](chunk),a=new Audio();RD.audio=a;var finished=false;
@@ -425,7 +452,7 @@ function rdNext(){
  document.getElementById("ttstext").textContent="Reading chunk "+(RD.total-RD.queue.length)+" of "+RD.total+"…";
  (function attempt(){if(RD.stopped)return;rdPlayTier(chunk,tier,function(ok){if(RD.stopped)return;if(ok){setTimeout(rdNext,250);}else{tier++;if(tier<RD_TIERS.length)attempt();else setTimeout(rdNext,250);}});})();
 }
-function rdSpeak(text){if(RD.playing&&!RD.stopped){rdStop();return;}rdStop();RD.queue=rdChunks(text);RD.total=RD.queue.length;if(!RD.queue.length)return;RD.stopped=false;document.getElementById("ttsbar").style.display="block";rdNext();}
+function rdSpeak(text){if(window.__JAHREAD&&!window.__JAHREAD.playGuard("rdSpeak"))return;if(RD.playing&&!RD.stopped){rdStop();return;}rdStop();RD.queue=rdChunks(text);RD.total=RD.queue.length;if(!RD.queue.length)return;RD.stopped=false;document.getElementById("ttsbar").style.display="block";rdNext();}
 var TTS={readChip:function(){var c=window._chip;if(!c)return;rdSpeak(c.name+". "+c.label+", "+c.era+" era. "+c.arch+" Process node "+c.node+", "+c.transistors+" transistors, "+c.tdp+" watts. "+c.mfg);},
 stop:rdStop,pause:function(){if(RD.audio)RD.audio.pause();},resume:function(){if(RD.audio)RD.audio.play().catch(function(){});}};
 /* ---------- data-grounded Q&A ---------- */
