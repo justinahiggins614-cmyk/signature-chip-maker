@@ -132,27 +132,29 @@ details.mstats-inline>summary::-webkit-details-marker{display:none}
 #jahThemeToggle:hover{opacity:1}
 html[data-theme="dark"]{filter:invert(1) hue-rotate(180deg)}
 html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"] canvas,html[data-theme="dark"] svg{filter:invert(1) hue-rotate(180deg)}
-/* FIRST-TIME USER GUIDE: spotlight tour + guide panel. Theme-matched; overlays never block content (clicks pass through, Esc/Skip always dismiss). */
-#guidebtn{background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:20px;padding:8px 18px;cursor:pointer;font-family:inherit;font-size:14px;margin-top:8px;min-height:44px}
-#guidebtn:hover{background:var(--copper);color:#0a1628}
-#tourscrim{position:fixed;inset:0;z-index:200;pointer-events:none}
-#tourring{position:absolute;border:3px solid var(--gold);border-radius:12px;box-shadow:0 0 0 9999px rgba(4,10,20,.55);transition:all .25s ease;display:none}
-#tourcard{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;z-index:201;max-width:540px;width:calc(100% - 24px);background:var(--navy2);border:2px solid var(--copper);border-radius:14px;padding:14px 16px;box-shadow:0 8px 30px rgba(0,0,0,.6);display:none}
-#tourcard h3{margin:0;color:var(--gold);font-size:16px}
-#tourcard .tstep{font-size:12px;color:var(--dim);margin-bottom:6px}
-#tourcard .twhat{font-size:13.5px;margin:8px 0 4px}
-#tourcard .twhat b{color:var(--cyan)}
-#tourcard .thow{font-size:13px;color:var(--dim);margin:0 0 10px;padding-left:18px}
-#tourcard .thow li{margin:3px 0}
-#tourcard .tbtns{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
-#tourcard button{background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;min-width:44px}
-#tourcard button.tprimary{background:var(--cyan);color:#0a1628;font-weight:bold}
-#guidepanel{position:fixed;left:50%;transform:translateX(-50%);top:12px;bottom:12px;z-index:201;max-width:660px;width:calc(100% - 24px);background:var(--navy2);border:2px solid var(--copper);border-radius:14px;padding:16px 18px;overflow-y:auto;display:none}
-#guidepanel h2{color:var(--gold);margin:0 0 6px;font-size:19px}
-#guidepanel h3{color:var(--cyan);margin:14px 0 4px;font-size:15px}
-#guidepanel p,#guidepanel li{font-size:13.5px}
-#guidepanel ul{margin:6px 0;padding-left:20px}
-#guidepanel .gclose{float:right;background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;min-width:44px}
+/* ---------- first-visit WELCOME overlay (2026-10-04 standard: centered modal, no scroll, no spotlight) ---------- */
+#jahGuideBtn{background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:20px;padding:8px 18px;cursor:pointer;font-family:inherit;font-size:14px;margin-top:8px;min-height:48px;min-width:48px}
+#jahGuideBtn:hover{background:var(--copper);color:#0a1628}
+#jahWelcome{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(4,10,20,.8)}
+#jahWelcome.show{display:flex}
+#jahWelcomeCard{background:var(--navy2);border:2px solid var(--gold);border-radius:14px;padding:22px 20px;max-width:540px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.6);color:var(--ink)}
+#jahWelcomeCard h2{margin:0 0 4px;color:var(--gold);font-size:20px}
+#jahWelcomeCard .wsub{margin:4px 0 0;color:var(--dim);font-size:14px}
+#jahWelcomeCard ol{margin:10px 0 0;padding-left:22px;font-size:14px;line-height:1.55}
+#jahWelcomeCard ol li{margin:8px 0}
+#jahWelcomeCard ol li b{color:var(--cyan)}
+#jahWelcomeCard .wbtnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+#jahGuide .btn,#jahWelcome .btn{min-height:48px;min-width:48px;font-size:15px;padding:12px 22px;border-radius:8px;border:1px solid var(--cyan);background:var(--panel);color:var(--cyan);cursor:pointer;font-family:inherit}
+#jahWelcomeOk{font-weight:700;background:var(--gold)!important;color:#0a1628!important;border:none!important}
+#jahGuide{position:fixed;inset:0;z-index:99900;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(4,10,20,.75)}
+#jahGuide.show{display:flex}
+#jahGuideCard{background:var(--navy2);border:1px solid var(--copper);border-radius:14px;max-width:680px;width:100%;max-height:86vh;overflow:auto;padding:20px 22px;color:var(--ink)}
+#jahGuideCard h2{margin-top:0;color:var(--gold)}
+#jahGuideCard .gfeat{margin:0 0 14px;padding:10px 12px;background:var(--navy);border:1px solid var(--copper);border-radius:10px}
+#jahGuideCard .gfeat b{color:var(--gold)}
+#jahGuideCard .gfeat p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--ink)}
+#jahGuideCard .gfeat p b{color:var(--cyan)}
+#jahGuideCloseRow{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 </style>
 </head>
 <body>
@@ -164,7 +166,7 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 <h1>⚙ THE SIGNATURE COMPUTER CHIP MAKER AND ARCHIVE</h1>
 <p>Original Signature-line chip designs — every chip type ever made or projected, fully planned, drawn and specified.</p>
 <details class="mstats-inline" open><summary>Site statistics</summary><div class="countchip"><span id="livecount">20,600</span> / 1,000,000 DESIGNS</div></details><br>
-<button type="button" id="guidebtn" onclick="Guide.open()" aria-label="Open the how-to-use guide">? Guide</button>
+<button type="button" id="jahGuideBtn" aria-label="Open the how-to-use guide">? Guide</button>
 </header>
 
 <main>
@@ -508,103 +510,74 @@ window.addEventListener("DOMContentLoaded",async()=>{
  else{try{await UI.spotlight();}catch(e){const b=document.getElementById("spotlight");if(b)b.style.display="none";}UI.init();}
 });
 </script>
-<!-- FIRST-TIME USER GUIDE: spotlight tour overlay + permanent guide panel -->
-<div id="tourscrim" aria-hidden="true"><div id="tourring"></div></div>
-<div id="tourcard" role="dialog" aria-modal="false" aria-label="Site tour" style="display:none">
-<div class="tstep" id="tourstep"></div>
-<h3 id="tourt"></h3>
-<p class="twhat" id="tourw"></p>
-<div style="font-size:12px;color:var(--dim);letter-spacing:.14em">HOW</div>
-<ol class="thow" id="tourh"></ol>
-<div class="tbtns"><button id="tourback">← Back</button><button id="tourskip">Skip tour</button><button id="tournext" class="tprimary">Next →</button></div>
+<!-- first-visit WELCOME overlay (2026-10-04 standard: centered modal, no scroll, no spotlight) -->
+<div id="jahWelcome" aria-hidden="true">
+  <div id="jahWelcomeCard" role="dialog" aria-modal="true" aria-label="Welcome to the Chip Maker and Archive">
+    <h2>Welcome to the Chip Maker and Archive</h2>
+    <p class="wsub">Original Signature-line chip designs &mdash; every chip type ever made or projected, marching to 1,000,000. Here&rsquo;s how to use it:</p>
+    <ol>
+      <li><b>Find a chip.</b> Describe what you need in the Chip Finder in plain words &mdash; or type an exact design ID like JAH-CHIP-000123. It never invents designs.</li>
+      <li><b>Browse by family or letter.</b> The 16 family buttons (CPU, GPU, NPU, and more) and the A&ndash;Z row filter the design grid. Tap All to clear.</li>
+      <li><b>Open a design.</b> Tap any card for the full spec table, the circuit-board drawing, block-by-block breakdown, and fabrication readiness. &ldquo;&#10003; Verify design&rdquo; re-checks the record&rsquo;s hash in your browser.</li>
+      <li><b>Listen and save.</b> Read aloud speaks the spec; Copy and Download save it as .txt / .json. The Chip Helper on every record answers from that design&rsquo;s own spec sheet.</li>
+    </ol>
+    <div class="wbtnrow">
+      <button class="btn" id="jahWelcomeOk" type="button">OK &mdash; Got it &#10003;</button>
+      <button class="btn" id="jahWelcomeFull" type="button">Full how-to guide</button>
+    </div>
+  </div>
 </div>
-<div id="guidepanel" role="dialog" aria-label="How to use this site" style="display:none">
-<button class="gclose" onclick="Guide.close()" aria-label="Close guide">✕ Close</button>
-<h2>? How to use this site</h2>
-<p style="color:var(--dim)">Every feature on The Signature Computer Chip Maker and Archive, in plain words.</p>
-<h3>🔎 Chip Finder</h3>
-<ul><li>Describe the chip you need in plain words — e.g. "low power sensor chip for a wearable". Results appear as you type.</li><li>Type an exact design ID like <b>JAH-CHIP-000123</b> to open that design directly. IDs are case-insensitive; digits are zero-padded for you.</li><li>The finder searches the archive only — it never invents designs.</li></ul>
-<h3>⚙ Families and A–Z</h3>
-<ul><li>The 16 family buttons filter the grid to one chip family: CPU, GPU, NPU, SoC, MCU, FPGA, memory controllers, sensors, power, quantum control, photonic, neuromorphic, DSP, modem, security enclave, chiplet interconnect.</li><li>The A–Z row filters by the first letter of the design name. Tap All to clear.</li></ul>
-<h3>★ Featured design</h3>
-<ul><li>A real design loads in the gold-bordered spotlight on every visit — spec summary plus the circuit-board drawing.</li><li><b>Open the full spec →</b> opens its complete record. <b>🎲 Surprise me</b> opens a random design.</li></ul>
-<h3>📄 Design records</h3>
-<ul><li>Tap any card to open its record: full spec table (purpose, architecture, process node, transistors, die size, package, voltage, clock, power, interfaces), the circuit-board drawing, block-by-block breakdown, and <b>🔧 Fabrication readiness</b> — what remains before real silicon.</li><li>Every record shows its honesty status: design <b>CONCEPT</b>, simulation <b>NOT_SIMULATED</b>, test <b>NOT_TESTED</b>, manufacturing <b>NOT_MANUFACTURED</b>. Every numeric spec is a GENERATED design target, never a measured value.</li></ul>
-<h3>✓ Verify design</h3>
-<ul><li>Recomputes the record's SHA-256 hash in your browser and compares it to the hash published in the archive index. <b>✓ MATCH</b> means the record is byte-identical to the shipped archive.</li></ul>
-<h3>🔊 Read aloud · ⧉ Copy · ⬇ Downloads</h3>
-<ul><li><b>🔊 Read aloud</b> speaks the spec through a tiered voice engine. The floating bar at the bottom gives <b>⏹ Stop</b>, <b>⏸ Pause</b>, <b>▶ Resume</b>.</li><li><b>⧉ Copy spec</b> copies the plain-text spec. <b>⬇ Download .txt / .json</b> save the full record, statuses included.</li></ul>
-<h3>RECORD panel</h3>
-<ul><li><b>↗ OPEN</b> opens the record's own link · <b>⇄ SOURCE</b> shows the design origin · <b># ID</b> shows and copies the design ID · <b>⚙ VERSION</b> shows the engine and schema version · <b>⤴ SHARE</b> shares the record link.</li></ul>
-<h3>🤖 Chip Helper · ⚠ Report</h3>
-<ul><li>The AI Helper on every record answers from that design's own spec sheet only — process node, power, pins, transistors, clock, materials, board sections, lineage.</li><li><b>⚠ Report problem</b> files a local-only report (kept on your device) about a spec issue.</li></ul>
-<h3>◐ Dark mode · data links</h3>
-<ul><li>The <b>◐</b> button top-right toggles an inverted dark theme.</li><li>Footer links: <b>api.json</b>, <b>chips-catalog.json</b>, the <b>static design index</b> (every design, by family), and the sitemap.</li></ul>
-<p style="color:var(--dim);margin-top:14px">To take this tour again, clear the saved tour flag in your browser storage (key: <b>jah-tour-seen-chips</b>) and reload.</p>
+<div id="jahGuide" aria-hidden="true">
+  <div id="jahGuideCard" role="dialog" aria-modal="true" aria-label="How to use the Chip Maker and Archive">
+    <div id="jahGuideCloseRow">
+      <h2 style="margin:0">How to use this site</h2>
+      <button class="btn" id="jahGuideClose" type="button">&#10005; Close</button>
+    </div>
+    <div class="gfeat"><b>&#128269; Chip Finder</b><p><b>What:</b> the search box at the top. <b>Does:</b> matches your plain words against real archived designs, or opens an exact ID. <b>How:</b> type e.g. &ldquo;low power sensor chip for a wearable&rdquo;, or JAH-CHIP-000123. The finder searches the archive only &mdash; it never invents designs.</p></div>
+    <div class="gfeat"><b>&#9881; Families and A&ndash;Z</b><p><b>What:</b> the family filter row and the A&ndash;Z row. <b>Does:</b> filters the grid to one chip family (CPU, GPU, NPU, SoC, MCU, FPGA, memory, sensors, power, quantum, photonic, neuromorphic, DSP, modem, security, chiplet) or to names starting with a letter. <b>How:</b> tap a family or a letter; tap All to clear.</p></div>
+    <div class="gfeat"><b>&#9733; Featured design</b><p><b>What:</b> the gold-bordered spotlight box. <b>Does:</b> shows one real design &mdash; spec summary plus the circuit-board drawing &mdash; on every visit. <b>How:</b> &ldquo;Open the full spec &rarr;&rdquo; opens its record; &#127922; Surprise me opens a random design.</p></div>
+    <div class="gfeat"><b>&#128196; Design records</b><p><b>What:</b> the grid of design cards. <b>Does:</b> every card is one real design: full spec table (purpose, architecture, process node, transistors, die size, package, voltage, clock, power, interfaces), circuit-board drawing, block-by-block breakdown, fabrication readiness. Every record shows its honesty status: CONCEPT / NOT_SIMULATED / NOT_TESTED / NOT_MANUFACTURED. <b>How:</b> tap any card; &ldquo;Load more designs&rdquo; extends the grid.</p></div>
+    <div class="gfeat"><b>&#10003; Verify design</b><p><b>What:</b> the verify button on every record. <b>Does:</b> recomputes the record&rsquo;s SHA-256 hash in your browser and compares it to the archive index. <b>How:</b> open any design, tap &ldquo;&#10003; Verify design&rdquo; &mdash; &#10003; MATCH means byte-identical to the shipped archive.</p></div>
+    <div class="gfeat"><b>&#128266; Read aloud &middot; &#10697; Copy &middot; &#11015; Downloads</b><p><b>What:</b> the record toolbar. <b>Does:</b> Read aloud speaks the spec (floating bar: Stop / Pause / Resume); Copy spec copies the plain text; downloads save the full record as .txt / .json with statuses. <b>How:</b> the buttons on any open record.</p></div>
+    <div class="gfeat"><b>RECORD panel</b><p><b>What:</b> the record action row. <b>Does:</b> &#8599; OPEN opens the record&rsquo;s own link; &#8646; SOURCE shows the design origin; # ID shows and copies the design ID; &#9881; VERSION shows engine and schema version; &#10548; SHARE shares the record link. <b>How:</b> tap the icons on any open record.</p></div>
+    <div class="gfeat"><b>&#129302; Chip Helper &middot; &#9888; Report</b><p><b>What:</b> the AI helper on every record. <b>Does:</b> answers from that design&rsquo;s own spec sheet only &mdash; process node, power, pins, transistors, clock, materials, board sections, lineage. <b>How:</b> ask it anything about the design; &ldquo;&#9888; Report problem&rdquo; files a local-only report on your device.</p></div>
+    <div class="gfeat"><b>&#9681; Dark mode &middot; data links</b><p><b>What:</b> the &#9681; button top-right and the footer links. <b>Does:</b> toggles an inverted dark theme; footer links expose api.json, chips-catalog.json, the static design index, and the sitemap. <b>How:</b> press &#9681;; your choice is remembered.</p></div>
+    <div class="gfeat"><b>Show the welcome guide</b><p><b>What:</b> the short welcome overlay from your first visit. <b>Does:</b> the 4-step quick start &mdash; the page stays put, the overlay teaches. <b>How:</b> press the button below, or ? Guide in the header any time.</p></div>
+    <div class="btnrow" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+      <button class="btn" id="jahGuideTour" type="button">&#9654; Show the welcome guide</button>
+      <button class="btn" id="jahGuideClose2" type="button">&#10005; Close guide</button>
+    </div>
+  </div>
 </div>
-<script>
-/* FIRST-TIME USER GUIDE: spotlight tour (localStorage jah-tour-seen-chips) + guide panel.
-   Overlays never block content: clicks pass through the scrim; Esc/Skip/✕ always dismiss. */
-(function(){
-"use strict";
-function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
-function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-var SEEN="jah-tour-seen-chips";
-var steps=[
- {sel:"header.brand",t:"Welcome to the archive",w:"<b>WHAT:</b> The Signature Computer Chip Maker and Archive — every original Signature chip design, marching to 1,000,000.",d:"<b>WHAT IT DOES:</b> This page is the front door to all 15,600 archived designs in 16 chip families.",h:["The counter chip shows the live archive total.","Tap ? Guide in the header any time to re-read the full guide."]},
- {sel:"#finderbar",t:"Chip Finder",w:"<b>WHAT:</b> The search box at the top of the page.",d:"<b>WHAT IT DOES:</b> Describe the chip you need in plain words — or type an exact design ID like JAH-CHIP-000123 — to jump to real archived designs. It never invents results.",h:["Type, e.g., &ldquo;low power sensor chip for a wearable&rdquo;.","Type an exact ID (JAH-CHIP-######) to open that design directly."]},
- {sel:"#famrow",t:"Families and A–Z",w:"<b>WHAT:</b> The family filter row and the A–Z row.",d:"<b>WHAT IT DOES:</b> Filters the grid to one chip family (CPU, GPU, NPU, and 13 more) or to designs whose names start with a letter.",h:["Tap a family to see only its designs.","Tap All to clear the filter."]},
- {sel:"#spotlight",t:"Featured design",w:"<b>WHAT:</b> The gold-bordered spotlight box.",d:"<b>WHAT IT DOES:</b> Shows one real design — spec summary plus the circuit-board drawing — the moment the page loads.",h:["&ldquo;Open the full spec &rarr;&rdquo; opens its complete record.","&ldquo;&#127922; Surprise me&rdquo; opens a random design."]},
- {sel:"#home",t:"Design records",w:"<b>WHAT:</b> The grid of design cards.",d:"<b>WHAT IT DOES:</b> Every card is one real design. Opening it shows the full spec table, the circuit-board drawing, block-by-block breakdown, fabrication readiness, downloads and the AI helper.",h:["Tap any card to open its record.","&ldquo;Load more designs&rdquo; extends the grid; the count line tracks progress.","Every card carries the design's honesty status."]},
- {sel:null,t:"Verify a design",w:"<b>WHAT:</b> The &ldquo;&check; Verify design&rdquo; button on every record.",d:"<b>WHAT IT DOES:</b> Recomputes the record's SHA-256 hash in your browser and compares it to the hash published in the archive index.",h:["Open any design, then tap &ldquo;&check; Verify design&rdquo;.","&ldquo;&check; MATCH&rdquo; means the record is byte-identical to the shipped archive."]},
- {sel:null,t:"Read aloud, copy, download",w:"<b>WHAT:</b> The record toolbar.",d:"<b>WHAT IT DOES:</b> &#128266; Read aloud speaks the spec; the floating bottom bar gives Stop / Pause / Resume. Copy and download buttons save the full record as text or JSON.",h:["Tap &#128266; Read aloud, control it from the bottom bar.","Downloads include the full status block: CONCEPT / NOT_SIMULATED / NOT_TESTED / NOT_MANUFACTURED."]},
- {sel:null,t:"You are set",w:"<b>WHAT:</b> That is the whole site.",d:"<b>WHAT IT DOES:</b> Finder, families, featured design, records, verify, read-aloud, downloads — plus the &#129302; Chip Helper on every record, answering from that design's own spec sheet.",h:["This tour shows once; ? Guide in the header brings back this guide.","Honesty: every numeric spec is a GENERATED design target, never a measured value."]}
-];
-var card=document.getElementById("tourcard"),ring=document.getElementById("tourring");
-var i=0,active=false;
-function markSeen(){lsSet(SEEN,"1");}
-function place(){
- var s=steps[i],el=s.sel?document.querySelector(s.sel):null;
- if(el&&el.getBoundingClientRect){var r=el.getBoundingClientRect(),sy=window.scrollY||0;
-  ring.style.display="block";ring.style.left=(r.left+window.scrollX-6)+"px";ring.style.top=(r.top+sy-6)+"px";
-  ring.style.width=(r.width+12)+"px";ring.style.height=(r.height+12)+"px";
-  try{el.scrollIntoView({block:"center",behavior:"smooth"});}catch(e){}
- }else{ring.style.display="none";}
- document.getElementById("tourstep").textContent="Step "+(i+1)+" of "+steps.length;
- document.getElementById("tourt").textContent=s.t;
- document.getElementById("tourw").innerHTML=s.w+"<br>"+s.d;
- document.getElementById("tourh").innerHTML=s.h.map(function(x){return "<li>"+x+"</li>";}).join("");
- document.getElementById("tourback").disabled=(i===0);
- document.getElementById("tourback").style.opacity=(i===0)?".45":"1";
- document.getElementById("tournext").textContent=(i===steps.length-1)?"Done ✓":"Next →";
-}
-function show(){active=true;card.style.display="block";place();var b=document.getElementById("tournext");if(b)b.focus();}
-function hide(){active=false;card.style.display="none";ring.style.display="none";}
-window.Tour={start:function(){i=0;show();},next:function(){if(i<steps.length-1){i++;place();}else{Tour.end();}},back:function(){if(i>0){i--;place();}},skip:function(){markSeen();hide();},end:function(){markSeen();hide();},active:function(){return active;}};
-document.getElementById("tournext").onclick=function(){Tour.next();};
-document.getElementById("tourback").onclick=function(){Tour.back();};
-document.getElementById("tourskip").onclick=function(){Tour.skip();};
-window.addEventListener("resize",function(){if(active)place();});
-window.Guide={open:function(){document.getElementById("guidepanel").style.display="block";var c=document.querySelector("#guidepanel .gclose");if(c)c.focus();},
- close:function(){document.getElementById("guidepanel").style.display="none";},
- replay:function(){Guide.close();Tour.start();}};
+<script>(function(){try{
+/* ---------- first-visit WELCOME overlay (2026-10-04 standard): centered modal.
+   NO auto-scroll, NO spotlight, NO section jumps — the page stays put, the overlay teaches. ---------- */
+var FLAG="jah-tour-seen-chips";
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+var w=document.getElementById("jahWelcome"),
+    guide=document.getElementById("jahGuide"),
+    guideCard=document.getElementById("jahGuideCard"),
+    guideBtn=document.getElementById("jahGuideBtn");
+function openWelcome(){w.classList.add("show");w.setAttribute("aria-hidden","false");
+  try{document.getElementById("jahWelcomeOk").focus({preventScroll:true})}catch(e){}}
+function closeWelcome(){w.classList.remove("show");w.setAttribute("aria-hidden","true");ls(FLAG,"1")}
+document.getElementById("jahWelcomeOk").onclick=closeWelcome;
+document.getElementById("jahWelcomeFull").onclick=function(){closeWelcome();openGuide()};
+w.addEventListener("click",function(e){if(e.target===w)closeWelcome()});
 document.addEventListener("keydown",function(e){
- var gp=document.getElementById("guidepanel");
- if(gp&&gp.style.display==="block"){if(e.key==="Escape")Guide.close();return;}
- if(!active)return;
- if(e.key==="Escape")Tour.skip();
- else if(e.key==="ArrowRight")Tour.next();
- else if(e.key==="ArrowLeft")Tour.back();
-});
-window.addEventListener("DOMContentLoaded",function(){
- setTimeout(function(){
-  if(lsGet(SEEN))return;
-  if(new URLSearchParams(location.search).get("chip"))return;
-  Tour.start();
- },1200);
-});
-})();
-</script>
+  if(w.classList.contains("show")&&e.key==="Escape"){closeWelcome();e.preventDefault()}});
+function openGuide(){guide.classList.add("show");guide.setAttribute("aria-hidden","false");
+  try{guideCard.scrollTop=0;document.getElementById("jahGuideClose").focus({preventScroll:true})}catch(e){}}
+function closeGuide(){guide.classList.remove("show");guide.setAttribute("aria-hidden","true");
+  try{guideBtn.focus({preventScroll:true})}catch(e){}}
+guideBtn.onclick=openWelcome;
+document.getElementById("jahGuideClose").onclick=closeGuide;
+document.getElementById("jahGuideClose2").onclick=closeGuide;
+document.getElementById("jahGuideTour").onclick=function(){closeGuide();openWelcome()};
+guide.addEventListener("click",function(e){if(e.target===guide)closeGuide()});
+var __qs="";try{__qs=location.search}catch(e){}
+if(!ls(FLAG)&&__qs.indexOf("chip=")<0){setTimeout(openWelcome,900)}
+}catch(e){}})();</script>
 <script>
 /* UX PASS: dark-mode toggle + session restore (localStorage only, nothing leaves this device) */
 (function(){
