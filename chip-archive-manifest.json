@@ -3,110 +3,110 @@
  "site": "The Signature Computer Chip Maker and Archive",
  "site_url": "https://justinahiggins614-cmyk.github.io/signature-chip-maker/",
  "site_number": 20,
- "updated": "2026-10-04T02:09:02Z",
- "total_designs": 17600,
- "generated_designs": 17600,
- "archived_designs": 17600,
+ "updated": "2026-10-04T04:09:02Z",
+ "total_designs": 18600,
+ "generated_designs": 18600,
+ "archived_designs": 18600,
  "goal": 1000000,
- "remaining_to_goal": 982400,
- "progress": "17600 / 1000000 DESIGNS",
+ "remaining_to_goal": 981400,
+ "progress": "18600 / 1000000 DESIGNS",
  "families": [
   {
    "key": "CPU",
    "label": "Signature CPU",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "GPU",
    "label": "Signature GPU",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "NPU",
    "label": "Signature NPU AI Accelerator",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "SOC",
    "label": "Signature SoC",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "MCU",
    "label": "Signature Microcontroller",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "FPGA",
    "label": "Signature FPGA",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "MEMC",
    "label": "Signature Memory Controller",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "SENSOR",
    "label": "Signature Sensor Chip",
-   "count": 1100
+   "count": 1163
   },
   {
    "key": "PMIC",
    "label": "Signature Power Management IC",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "QCTRL",
    "label": "Signature Quantum Control Chip",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "PHOT",
    "label": "Signature Photonic Chip",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "NEURO",
    "label": "Signature Neuromorphic Chip",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "DSP",
    "label": "Signature DSP",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "MODEM",
    "label": "Signature Baseband Modem",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "SEC",
    "label": "Signature Security Enclave",
-   "count": 1100
+   "count": 1162
   },
   {
    "key": "CHIPLET",
    "label": "Signature Chiplet Interconnect",
-   "count": 1100
+   "count": 1162
   }
  ],
  "family_count": 16,
  "id_scheme": "JAH-CHIP-######",
  "earliest_id": "JAH-CHIP-000001",
- "latest_id": "JAH-CHIP-017600",
+ "latest_id": "JAH-CHIP-018600",
  "archive_version": "2026-10-04",
  "generator_version": "chipgen-1.0",
  "engine_version": "1.0",
  "schema_version": "JAH-CHIP-RECORD/1.0",
  "index_version": "chip-index-1.0",
- "index_hash_sha256": "91084d060990d26895cfe5ba26853806a346b6c1bdcdf6a736ccd45968f75233",
+ "index_hash_sha256": "ea28426fd063954a127349ab7347665834dc36c3300dcaa2a1e8995562d1d88c",
  "hashes_index": "data/index/chips.hashes.json.gz",
  "chunks": {
   "pattern": "data/chunks/cNNNNN.json.gz",
   "per_chunk": 200,
-  "count": 88
+  "count": 93
  },
  "deep_link": "?chip=JAH-CHIP-000001",
  "record_status": "SIGNATURE ORIGINAL",
