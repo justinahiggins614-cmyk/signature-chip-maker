@@ -1,7 +1,7 @@
 {
  "engine_version": "1.0",
  "record_schema": "JAH-CHIP-RECORD/1.0",
- "generated_utc": "2026-10-03",
+ "generated_utc": "2026-10-04",
  "vectors": [
   {
    "id": "JAH-CHIP-000001",
@@ -25,17 +25,17 @@
    "note": "same seed + same engine version must reproduce this exact hash"
   },
   {
-   "id": "JAH-CHIP-007801",
-   "seed": 1881651732,
+   "id": "JAH-CHIP-008301",
+   "seed": 1025377289,
    "engine_version": "1.0",
-   "expected_hash_sha256": "f0d05a7136ce229aa6025a34694f13aec4d1e2544a9f1c5e1a2dc5aa6ee3c91e",
+   "expected_hash_sha256": "494ea27375162b5324648c34f1faf9fd1a8e90c137735337062a9013afc5166e",
    "note": "same seed + same engine version must reproduce this exact hash"
   },
   {
-   "id": "JAH-CHIP-015600",
+   "id": "JAH-CHIP-016600",
    "seed": 397578567,
    "engine_version": "1.0",
-   "expected_hash_sha256": "18b28ad1dfad9d4b0e0a28b0d1f8624b98c582739e834bd2a49d1e92641fdb96",
+   "expected_hash_sha256": "d2e05247478936f4f96fe17604f3492d7ed15dd194571fb49b4f4126c4c81141",
    "note": "same seed + same engine version must reproduce this exact hash"
   }
  ]
