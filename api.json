@@ -104,7 +104,7 @@
  "deep_link": "?chip=JAH-CHIP-000001",
  "search_index": "data/index/chips.search.json.gz",
  "catalog_feed": "data/chips-catalog.json",
- "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html)",
+ "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html), browse.html (unified A-Z archive)",
  "sitemap_index": "sitemap.xml -> sitemap-core.xml + sitemap-chips-bNNN.xml",
  "chunks": "data/chunks/cNNNNN.json.gz (200/chunk)",
  "health": {

@@ -91,7 +91,7 @@ def build_sitemap(base="https://justinahiggins614-cmyk.github.io/signature-chip-
     rows = all_rows()
     batch = 1000
     parts = []
-    core_urls = [base, base + "?browse=all", base + "chips.html", base + "methodology.html"]
+    core_urls = [base, base + "?browse=all", base + "browse.html", base + "chips.html", base + "methodology.html"]
     core = ['<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in core_urls:
@@ -304,7 +304,7 @@ def build_api(n):
            "deep_link": "?chip=JAH-CHIP-000001",
            "search_index": "data/index/chips.search.json.gz",
            "catalog_feed": "data/chips-catalog.json",
-           "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html)",
+           "static_catalog": "chips.html (per-family: chips-fam-<KEY>.html), browse.html (unified A-Z archive)",
            "sitemap_index": "sitemap.xml -> sitemap-core.xml + sitemap-chips-bNNN.xml",
            "chunks": "data/chunks/cNNNNN.json.gz (%d/chunk)" % CHUNK_N,
            "health": {"status": "OK", "last_build": man.get("updated"),
@@ -324,6 +324,10 @@ def main():
     build_api(total)
     build_catalog(total)
     build_static_catalog(total)
+    # Unified A-Z browse page — AFTER the index rebuild, stamped with the same
+    # fresh total, so the count is never one drip behind.
+    import build_browse
+    build_browse.build_browse(total)
     st["next_index"] = start + n
     save_state(st)
     print("seeded +%d designs, total %d, sitemap %d urls" % (n, total, urls))
