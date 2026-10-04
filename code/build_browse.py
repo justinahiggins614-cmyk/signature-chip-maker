@@ -78,6 +78,9 @@ details.bsec .body{padding:4px 12px 12px;border-top:1px solid #1d3a5f}
 .azrow a:hover{border-color:var(--copper)}
 .loadline{color:var(--dim);padding:14px;text-align:center}
 h2.sec{color:var(--gold);border-bottom:2px solid var(--copper);padding-bottom:6px;margin:26px 0 8px;font-size:clamp(17px,3.5vw,22px)}
+.jtabbar{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;border-bottom:1px solid rgba(128,128,128,.25)}
+.jtabbar a.jtab{flex:0 0 auto;text-decoration:none;border:1px solid rgba(160,160,160,.45);border-radius:999px;padding:9px 16px;font-size:.92em;color:inherit;background:rgba(127,127,127,.08);white-space:nowrap;font-family:inherit}
+.jtabbar a.jtab.on{background:#f5c518;border-color:#f5c518;color:#191919;font-weight:700}
 footer{border-top:2px solid var(--copper);padding:16px;text-align:center;color:var(--dim);font-size:12.5px}
 </style>
 </head>
@@ -87,6 +90,11 @@ footer{border-top:2px solid var(--copper);padding:16px;text-align:center;color:v
 <p>The full design archive — every chip, A to Z</p>
 <div class="countchip">&#9881; <span id="browsecount">%%COUNT%%</span> original Signature chip designs</div>
 </header>
+<nav class="jtabbar" aria-label="Site sections">
+<a class="jtab" href="index.html">🏠 Front Door</a>
+<a class="jtab" href="chips.html">📚 1 Million Archive</a>
+<a class="jtab on" href="browse.html">Browse</a><a class="jtab" href="methodology.html">Methodology</a>
+</nav>
 <main>
 <p class="staticcount">%%COUNT%% original Signature chip designs archived as of %%TODAY%% — IDs JAH-CHIP-000001&hellip;JAH-CHIP-%%LASTID%%, 16 families. Full records render deterministically in-browser from design seeds. Statuses: design CONCEPT (design only), simulation NOT_SIMULATED, test NOT_TESTED, manufacturing NOT_MANUFACTURED. <a href="index.html" style="color:var(--cyan)">&#8592; Back to the live archive</a></p>
 <div id="finderbar" role="search">

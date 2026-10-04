@@ -308,6 +308,7 @@ def build_static_catalog(n, base="https://justinahiggins614-cmyk.github.io/signa
                 + "<p class='sitekicker'><b>SITE 18 OF 27</b> &middot; THE JAH NETWORK</p>"
                 + "<h1>%s</h1><p>%s designs. <a href='chips.html'>All families</a> · <a href='%s'>Live archive</a></p>"
                 % (FAMLABELS[k], format(len(fam_rows), ",d"), base)
+                + TABBAR_CHIP
                 + "<table><tr><th>ID</th><th>Name</th><th>Type</th><th>Era</th><th>Summary</th><th>Record status</th></tr>"
                 + "".join(trs) + "</table></body></html>")
         open(os.path.join(ROOT, "chips-fam-%s.html" % k), "w").write(page)
