@@ -215,7 +215,7 @@ THE JAH NETWORK · The Signature Computer Chip Maker and Archive · all designs 
 "use strict";
 /* ---------- helpers ---------- */
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-async function gz(url){const r=await fetch(url);if(!r.ok)throw new Error("fetch "+r.status);const ab=await r.arrayBuffer();const ds=new DecompressionStream("gzip");const s=await new Response(new Blob([ab]).stream().pipeThrough(ds)).text();return s;}
+async function gz(url){const r=await fetch(url);if(!r.ok)throw new Error("fetch "+r.status);if(typeof DecompressionStream==="undefined")throw new Error("This browser cannot open the archive's data files — please open this page in Chrome.");const ab=await r.arrayBuffer();const ds=new DecompressionStream("gzip");const s=await new Response(new Blob([ab]).stream().pipeThrough(ds)).text();return s;}
 function qp(n){return new URLSearchParams(location.search).get(n);}
 var DB={rows:[],byId:{},total:0};
 var MAN=null;
@@ -288,20 +288,26 @@ spotlight:async function(){
   box.innerHTML='<div class="loadline" role="alert"><p>⚠ Featured design could not load ('+esc(e.message||e)+').</p><p><button class="toolbar" onclick="UI.spotlight()">Retry</button></p></div>';
  }
 },
-random:function(){if(!DB.rows.length)return;const r=DB.rows[Math.floor(Math.random()*DB.rows.length)];location.search="?chip="+r[0];},
+random:async function(){try{if(!DB.rows.length){await loadIndex();}if(!DB.rows.length){alert("The design index is still loading — please wait a moment and tap again.");return;}const r=DB.rows[Math.floor(Math.random()*DB.rows.length)];location.search="?chip="+r[0];}catch(e){alert("Could not open a random design right now. Please check your connection and try again.");}},
 open:function(id){location.search="?chip="+id;}
 };
 /* ---------- chip detail ---------- */
 function modalOpenChip(v){var s=document.getElementById("scrim");if(s)s.style.display="block";v.classList.add("modal-open");document.body.style.overflow="hidden";}
 function chipBack(){var s=document.getElementById("scrim");if(s)s.style.display="none";document.body.style.overflow="";location.search="";}
+/* Blank-screen guard: every chip-view failure renders a real error card with Retry/Back — never an eternal spinner. */
+function chipErrHtml(id,msg){return '<span class="backlink" onclick="chipBack()">← back to archive</span><div class="loadline" role="alert" style="border:2px solid var(--copper);border-radius:12px;padding:18px;margin:12px 0;background:var(--navy2)"><p style="font-size:16px;color:var(--ink)">⚠ '+msg+'</p><p><button class="toolbar" onclick="location.reload()">↻ Retry</button> <button class="toolbar" onclick="chipBack()">← Back to archive</button></p></div>';}
 async function openChip(id){
  document.getElementById("home").style.display="none";
  const v=document.getElementById("chipview");v.style.display="block";
  modalOpenChip(v);
  v.innerHTML='<div class="loadline" aria-live="polite"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Rendering design '+esc(id)+'…</p></div>';
  let row=null,rowErr=null;try{row=await withTimeout(loadRow(id),20000);}catch(e){rowErr=e;}
- if(!row){v.innerHTML='<span class="backlink" onclick="chipBack()">← back</span><p>'+(rowErr?'⚠ Could not load this design ('+esc(rowErr.message||rowErr)+'). <button class="toolbar" onclick="location.reload()">Retry</button>':'Design not found.')+'</p>';return;}
- const E=window.ChipEngine, c=E.canonicalRecord(row);
+ if(!row){v.innerHTML=chipErrHtml(id,(rowErr?'Could not load this design ('+esc(rowErr.message||rowErr)+').':'Design not found in the archive.'));return;}
+ if(!window.ChipEngine||!window.ChipEngine.canonicalRecord){v.innerHTML=chipErrHtml(id,"The design engine did not load. Please reload the page.");return;}
+ var E=window.ChipEngine, c=null;
+ var watchdog=setTimeout(function(){var vv=document.getElementById("chipview");if(vv&&vv.innerHTML.indexOf("Rendering design")>-1){vv.innerHTML=chipErrHtml(id,"This is taking too long — the design file may not be downloading. Check your connection.");}},35000);
+ try{
+ c=E.canonicalRecord(row);
  const F=E.FAMDEF[row.fam];
  const pcQ=encodeURIComponent(row.name.replace(/^Signature /,"").split(" ")[0]+" chip");
  let h='<span class="backlink" onclick="chipBack()">← back to archive</span>';
@@ -355,6 +361,8 @@ async function openChip(id){
  let lk=document.querySelector('link[rel="canonical"][data-chip]');
  if(!lk){lk=document.createElement("link");lk.rel="canonical";lk.setAttribute("data-chip","1");document.head.appendChild(lk);}
  lk.href=c.canonical_url;
+ clearTimeout(watchdog);
+ }catch(err){clearTimeout(watchdog);v.innerHTML=chipErrHtml(id,"Something went wrong while drawing this design ("+esc((err&&err.message)||err)+"). Your archive is fine — please retry.");}
 }
 /* sorted-keys canonicalization — mirrors code/build_hashes.js exactly */
 function canonJSON(c){function sk(v){if(Array.isArray(v))return v.map(sk);if(v&&typeof v==="object"){const o={};Object.keys(v).sort().forEach(k=>{o[k]=sk(v[k]);});return o;}return v;}return JSON.stringify(sk(c));}
