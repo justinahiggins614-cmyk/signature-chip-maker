@@ -236,13 +236,21 @@ def build_browse(total=None):
             '</details>' % (k, k, FAMLABELS[k], format(c, ",d")))
     fam_sections = "\n".join(fam_sections)
 
+    # Per-letter design counts for the A-Z summaries: same bucketing as the
+    # client-side letterOf() (strip a leading "Signature " from the name).
+    az_counts = Counter()
+    for r in rows:
+        nm = re.sub(r"^Signature\s+", "", str(r[1]), flags=re.I)
+        ch = nm[0].upper() if nm else "#"
+        az_counts[ch if "A" <= ch <= "Z" else "#"] += 1
+
     az_sections = []
     for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         az_sections.append(
             '<details class="bsec" id="az-%s" data-kind="az" data-key="%s">'
-            '<summary>Letter %s</summary>'
+            '<summary>Letter %s<span class="cnt">%s designs</span></summary>'
             '<div class="body"><p class="loadline">Open to load designs under %s.</p></div>'
-            '</details>' % (c, c, c, c))
+            '</details>' % (c, c, c, format(az_counts.get(c, 0), ",d"), c))
     az_sections = "\n".join(az_sections)
 
     html = (TEMPLATE
