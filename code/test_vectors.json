@@ -25,17 +25,17 @@
    "note": "same seed + same engine version must reproduce this exact hash"
   },
   {
-   "id": "JAH-CHIP-014301",
-   "seed": 1025377289,
+   "id": "JAH-CHIP-014801",
+   "seed": 1881651732,
    "engine_version": "1.0",
-   "expected_hash_sha256": "7cb88730fb9829013753f450d545ee24276bfcd6a24b982855d2c30ee3549831",
+   "expected_hash_sha256": "54204e8d4e415cb9f8b132054f2d0e9d5f127df71ba2395052b1508ae51f3c7d",
    "note": "same seed + same engine version must reproduce this exact hash"
   },
   {
-   "id": "JAH-CHIP-028600",
+   "id": "JAH-CHIP-029600",
    "seed": 397578567,
    "engine_version": "1.0",
-   "expected_hash_sha256": "8e0f980239626bb2f0e65cfb1e16f66d2062dd86a1292815350a1d817f93aacd",
+   "expected_hash_sha256": "21f985d3f0151e548a11cf2df7679487ac199f23e68ff5300c4235abd474572f",
    "note": "same seed + same engine version must reproduce this exact hash"
   }
  ]
