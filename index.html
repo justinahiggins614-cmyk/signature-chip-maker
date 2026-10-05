@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{var _jt=localStorage.getItem('jah-theme');if(_jt==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(_je){}</script>
+<script src="js/signin.js"></script>
+<script>window.PS=(function(){var s=(typeof JAHProfile!=='undefined')?JAHProfile.store:null;var l=null;try{l=localStorage}catch(_e){}return{get:function(k){try{return s?s.get(k):(l?l.getItem(k):null)}catch(e){return null}},set:function(k,v){try{if(s)s.set(k,v);else if(l)l.setItem(k,v)}catch(e){}},remove:function(k){try{if(s)s.remove(k);else if(l)l.removeItem(k)}catch(e){}},keys:function(){try{return s?s.keys():[]}catch(e){return[]}}}})();</script>
+<script>try{var _jt=PS.get('jah-theme');if(_jt==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(_je){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Signature Computer Chip Maker and Archive — 1,000,000 Chip Designs</title>
 <meta name="description" content="The Signature Computer Chip Maker and Archive: original Signature-line chip designs for every chip type ever made or projected — CPUs, GPUs, AI accelerators, SoCs, microcontrollers, FPGAs, quantum control and more. Deterministic generator marching to 1,000,000 designs.">
@@ -232,10 +234,10 @@ async function loadManifest(retry){
   const r=await withTimeout(fetch("chip-archive-manifest.json",{cache:"no-store"}),12000);
   if(!r.ok)throw new Error("http "+r.status);
   MAN=await r.json();
-  try{localStorage.setItem("jah-chip-manifest",JSON.stringify({t:Date.now(),m:MAN}));}catch(e){}
+  try{PS.set("jah-chip-manifest",JSON.stringify({t:Date.now(),m:MAN}));}catch(e){}
   setCount(Number(MAN.total_designs).toLocaleString("en-US"),"live");
  }catch(e){
-  let cached=null;try{cached=JSON.parse(localStorage.getItem("jah-chip-manifest")||"null");}catch(e2){}
+  let cached=null;try{cached=JSON.parse(PS.get("jah-chip-manifest")||"null");}catch(e2){}
   if(cached&&cached.m&&cached.m.total_designs){
    setCount(Number(cached.m.total_designs).toLocaleString("en-US")+" · LAST VERIFIED "+new Date(cached.t).toISOString().slice(0,10),"cached");
   }else{
@@ -388,10 +390,10 @@ UI.report=function(){const c=window._chip;if(!c)return;const b=recInfoBox();
 UI.fileReport=function(){const c=window._chip;if(!c)return;
  const cat=(document.getElementById("repcat")||{}).value||"other";
  const d=new Date().toISOString().slice(0,10).replace(/-/g,"");
- let n=1;try{n=(parseInt(localStorage.getItem("jah-chip-report-n")||"0",10)||0)+1;localStorage.setItem("jah-chip-report-n",String(n));}catch(e){}
+ let n=1;try{n=(parseInt(PS.get("jah-chip-report-n")||"0",10)||0)+1;PS.set("jah-chip-report-n",String(n));}catch(e){}
  const rid="JAH-CHIP-REPORT-"+d+"-"+String(n).padStart(4,"0");
  const rec={report_id:rid,chip_id:c.id,category:cat,filed_at:new Date().toISOString(),engine_version:c.engineVer,record_schema:c.record_schema,status:"LOCAL-ONLY"};
- try{const log=JSON.parse(localStorage.getItem("jah-chip-report-log")||"[]");log.push(rec);localStorage.setItem("jah-chip-report-log",JSON.stringify(log));}catch(e){}
+ try{const log=JSON.parse(PS.get("jah-chip-report-log")||"[]");log.push(rec);PS.set("jah-chip-report-log",JSON.stringify(log));}catch(e){}
  recInfoShow("<b>REPORT FILED (kept on this device)</b><br>"+esc(rid)+" · "+esc(c.id)+" · "+esc(cat)+"<br><textarea readonly rows='6' style='width:100%;background:var(--navy2);color:var(--ink);border:1px solid var(--cyan);border-radius:6px'>"+esc(JSON.stringify(rec,null,1))+"</textarea><div style='color:var(--dim);font-size:12px'>Copy the report above to send it in. The record itself is unchanged.</div>");};
 UI.copyChip=function(){const c=window._chip;if(!c)return;const t=chipText(c);navigator.clipboard.writeText(t).then(()=>alert("Spec copied."),()=>alert("Copy blocked by browser."));};
 UI.dlTxt=function(){const c=window._chip;if(!c)return;dl(c.id+"-v"+(c.record_version||"1")+".txt",chipText(c),"text/plain");};
@@ -504,7 +506,8 @@ function chipGreet(c){var JT=chipTalk();if(JT){try{return JT.greet(chipProfile(c
 var QA={ask:function(){const inp=document.getElementById("qain");const q=inp.value.trim();if(!q)return;inp.value="";const c=window._chip;
  const log=document.getElementById("qalog");log.insertAdjacentHTML("beforeend",'<div class="q">You: '+esc(q)+'</div><div class="a">'+esc(QA.say(c,q))+'</div>');log.scrollTop=log.scrollHeight;},
 say:function(c,q){var prof=chipProfile(c),JT=chipTalk(),raw;
- if(JT&&chipIsSmallTalk(q)){raw=JT.chatFor(prof,'ai:'+(prof.id||prof.name)).reply(q);}else{raw=QA.answerRaw(c,q);}
+ var _cb='ai:'+(prof.id||prof.name);var _ck=(typeof JAHProfile!=='undefined')?JAHProfile.chatKey(_cb):_cb;
+ if(JT&&chipIsSmallTalk(q)){raw=JT.chatFor(prof,_ck).reply(q);}else{raw=QA.answerRaw(c,q);}
  return JT?JT.guard(raw,prof):raw;},
 answerRaw:function(c,q){q=q.toLowerCase();
  const has=(...ws)=>ws.some(w=>q.includes(w));
@@ -604,7 +607,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
 /* ---------- first-visit WELCOME overlay (2026-10-04 standard): centered modal.
    NO auto-scroll, NO spotlight, NO section jumps — the page stays put, the overlay teaches. ---------- */
 var FLAG="jah-tour-seen-chips";
-function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function ls(k,v){try{if(v===undefined)return PS.get(k);PS.set(k,v)}catch(e){return null}}
 var w=document.getElementById("jahWelcome"),
     guide=document.getElementById("jahGuide"),
     guideCard=document.getElementById("jahGuideCard"),
@@ -633,8 +636,8 @@ if(!ls(FLAG)&&__qs.indexOf("chip=")<0){setTimeout(openWelcome,900)}
 /* UX PASS: dark-mode toggle + session restore (localStorage only, nothing leaves this device) */
 (function(){
 'use strict';
-function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
-function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsGet(k){try{return PS.get(k);}catch(e){return null;}}
+function lsSet(k,v){try{PS.set(k,v);}catch(e){}}
 /* dark-mode toggle */
 var tb=document.getElementById('jahThemeToggle');
 function paintToggle(){ if(tb) tb.textContent = document.documentElement.getAttribute('data-theme')==='dark' ? '◑' : '◐'; }
@@ -658,6 +661,16 @@ if(typeof openChip==='function' && !openChip._jahWrapped){
 }
 document.addEventListener('click',function(e){ var t=e.target&&e.target.closest?e.target.closest('[data-record],[data-spec],[data-patent],[data-id]'):null; if(t){ var rid=t.getAttribute('data-record')||t.getAttribute('data-spec')||t.getAttribute('data-patent')||t.getAttribute('data-id'); if(rid) lsSet('jah-lastrec:'+location.pathname,rid); } },true);
 window.addEventListener('load',function(){ if(location.search.indexOf('=')>0) return; var rid=lsGet('jah-lastrec:'+location.pathname); if(!rid) return; setTimeout(function(){ var el=document.querySelector('[data-record="'+rid+'"],[data-spec="'+rid+'"],[data-patent="'+rid+'"],[data-id="'+rid+'"]'); if(!el){ var cards=document.querySelectorAll('.card'); for(var i=0;i<cards.length;i++){ if(cards[i].textContent.indexOf(rid)>=0){ el=cards[i]; break; } } } if(el){ try{el.scrollIntoView({block:'center'});}catch(e){} } },400); });
+})();
+</script>
+<script>
+(function () {
+  var mount = document.querySelector('header .booksearch') ||
+              document.querySelector('nav.jtabbar') ||
+              document.querySelector('header nav') ||
+              document.querySelector('header') ||
+              document.body;
+  if (window.JAHProfile && JAHProfile.ui) JAHProfile.ui.renderButton(mount);
 })();
 </script>
 </body>
