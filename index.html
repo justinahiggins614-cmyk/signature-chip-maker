@@ -298,6 +298,7 @@ function chipBack(){var s=document.getElementById("scrim");if(s)s.style.display=
 function chipErrHtml(id,msg){return '<span class="backlink" onclick="chipBack()">← back to archive</span><div class="loadline" role="alert" style="border:2px solid var(--copper);border-radius:12px;padding:18px;margin:12px 0;background:var(--navy2)"><p style="font-size:16px;color:var(--ink)">⚠ '+msg+'</p><p><button class="toolbar" onclick="location.reload()">↻ Retry</button> <button class="toolbar" onclick="chipBack()">← Back to archive</button></p></div>';}
 async function openChip(id){
  document.getElementById("home").style.display="none";
+ var sp=document.getElementById("spotlight");if(sp)sp.style.display="none"; /* spotlight is a home-page feature: never leave its loader spinner visible on the detail path */
  const v=document.getElementById("chipview");v.style.display="block";
  modalOpenChip(v);
  v.innerHTML='<div class="loadline" aria-live="polite"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Rendering design '+esc(id)+'…</p></div>';
