@@ -226,7 +226,7 @@ def build_browse(total=None):
     n = len(rows) if total is None else total
     nfmt = format(n, ",d")
     today = date.today().isoformat()
-    last_id = "JAH-CHIP-%06d" % n
+    last_id = "%06d" % n
     fam_counts = Counter(r[2] for r in rows)
 
     fam_quick = " ".join(
