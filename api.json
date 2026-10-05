@@ -3,11 +3,11 @@
  "site_url": "https://justinahiggins614-cmyk.github.io/signature-chip-maker/",
  "site_number": 20,
  "manifest": "chip-archive-manifest.json",
- "designs_seeded": 35600,
- "total_designs": 35600,
+ "designs_seeded": 35601,
+ "total_designs": 35601,
  "goal": 1000000,
- "remaining_to_goal": 964400,
- "latest_id": "JAH-CHIP-035600",
+ "remaining_to_goal": 964399,
+ "latest_id": "JAH-CHIP-035601",
  "earliest_id": "JAH-CHIP-000001",
  "families": [
   {
@@ -28,7 +28,7 @@
   {
    "key": "SOC",
    "label": "Signature SoC",
-   "count": 2225
+   "count": 2226
   },
   {
    "key": "MCU",
@@ -97,8 +97,8 @@
  "engine_version": "1.0",
  "schema_version": "JAH-CHIP-RECORD/1.0",
  "index_version": "chip-index-1.0",
- "index_hash_sha256": "cab3a89e16cea4b5951b1482ec8c439ba5a619bce7cae0302efe1bb547b4ec3c",
- "updated": "2026-10-05T14:09:09Z",
+ "index_hash_sha256": "5d3bbe97d211a02827417ae0e05a06d8b0c7fc13b1d505ec44a323755dc55e8e",
+ "updated": "2026-10-05T15:58:36Z",
  "id_scheme": "JAH-CHIP-######",
  "part_scheme": "SIG-CHIP-#### (Signature-original)",
  "deep_link": "?chip=JAH-CHIP-000001",
@@ -109,9 +109,9 @@
  "chunks": "data/chunks/cNNNNN.json.gz (200/chunk)",
  "health": {
   "status": "OK",
-  "last_build": "2026-10-05T14:09:09Z",
-  "index_records": 35600,
-  "index_hash_sha256": "cab3a89e16cea4b5951b1482ec8c439ba5a619bce7cae0302efe1bb547b4ec3c"
+  "last_build": "2026-10-05T15:58:36Z",
+  "index_records": 35601,
+  "index_hash_sha256": "5d3bbe97d211a02827417ae0e05a06d8b0c7fc13b1d505ec44a323755dc55e8e"
  },
  "note": "All designs are original Signature-line works. No real manufacturer branding, part numbers, or datasheet text."
 }

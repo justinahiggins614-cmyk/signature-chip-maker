@@ -32,10 +32,10 @@
    "note": "same seed + same engine version must reproduce this exact hash"
   },
   {
-   "id": "JAH-CHIP-035600",
-   "seed": 397578567,
+   "id": "JAH-CHIP-035601",
+   "seed": 20261005,
    "engine_version": "1.0",
-   "expected_hash_sha256": "1e81ca4ad3e63678f0f20889d36088a31dc8ae311688a46bff77901c930faa24",
+   "expected_hash_sha256": "84adca87c178a86353364b7ad8c6db300d83910661b6c655fe1a6a8005566513",
    "note": "same seed + same engine version must reproduce this exact hash"
   }
  ]
