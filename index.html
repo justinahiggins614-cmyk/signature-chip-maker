@@ -196,12 +196,9 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 <div class="frow"><input id="finderq" placeholder="e.g. low power sensor chip for a wearable" aria-label="Describe the chip you need" oninput="Finder.live()"><button onclick="Finder.ask()">Find it</button></div>
 <div id="finderres" aria-live="polite"></div>
 </div>
-<div class="azrow" id="famrow" aria-label="Filter by chip family"></div>
-<div class="azrow" id="azrow" aria-label="A to Z"></div>
 </div>
 <p class="staticcount">30,600 original Signature chip designs archived as of 2026-10-05 — IDs JAH-CHIP-000001…JAH-CHIP-030600, 16 families. Full records render deterministically in-browser from design seeds. Statuses: design CONCEPT (design only), simulation NOT_SIMULATED, test NOT_TESTED, manufacturing NOT_MANUFACTURED. Machine-readable: chip-archive-manifest.json · api.json · schema/ · llms.txt · ai-manifest.json. <a href="methodology.html" style="color:var(--cyan)">Data &amp; methodology</a></p>
 <div style="text-align:center;margin:10px 4px 2px"><a href="browse.html" style="display:inline-block;background:var(--panel);border:2px solid var(--copper);color:var(--gold);border-radius:12px;padding:12px 26px;font-size:16px;font-weight:bold;text-decoration:none">&#128214; Browse the full A&ndash;Z chip archive &rarr;</a></div>
-<div id="home"><div class="grid" id="grid"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading chip designs…</p></div></div><div style="text-align:center;margin:16px"><button class="toolbar" id="morebtn" onclick="UI.more()" style="background:var(--panel);border:1px solid var(--copper);color:var(--gold);border-radius:8px;padding:10px 22px;cursor:pointer;font-family:inherit;font-size:15px">Load more designs</button><div id="loadstat" style="color:var(--dim);font-size:12px;margin-top:6px" aria-live="polite"></div></div></div>
 <div id="chipview" style="display:none"></div>
 </main>
 <div id="ttsbar"><span id="ttstext" style="color:var(--dim);font-size:12px"></span><br>
@@ -252,25 +249,8 @@ async function loadManifest(retry){
 var BOOTERR=null;
 async function loadIndex(){try{const t=await withTimeout(gz("data/index/chips.search.json.gz"),20000);const rows=t.trim().split("\n").map(l=>JSON.parse(l));DB.rows=rows;rows.forEach(r=>DB.byId[r[0]]=r);DB.total=rows.length;if(!MAN)document.getElementById("livecount").textContent=DB.total.toLocaleString("en-US");}catch(e){BOOTERR=e;}}
 async function loadRow(id){const n=parseInt(id.split("-")[2],10);const c=String(Math.floor((n-1)/200)+1).padStart(5,"0");const t=await gz("data/chunks/c"+c+".json.gz");for(const l of t.trim().split("\n")){const r=JSON.parse(l);if(r.id===id)return r;}return null;}
-/* ---------- home grid ---------- */
-var UI={shown:0,filter:null,letter:null,
-init:function(){const fr=document.getElementById("famrow");const E=window.ChipEngine;
- fr.innerHTML='<button data-f="" class="on" onclick="UI.setFam(\'\')">All</button>'+E.FAMS.map(f=>'<button data-f="'+f+'" onclick="UI.setFam(\''+f+'\')">'+esc(E.FAMDEF[f].label.replace("Signature ",""))+'</button>').join("");
- const az=document.getElementById("azrow");let h='<a href="#" data-l="" class="on" onclick="UI.setLetter(\'\');return false">All</a>';
- for(let i=65;i<=90;i++){const L=String.fromCharCode(i);h+='<a href="#" data-l="'+L+'" onclick="UI.setLetter(\''+L+'\');return false">'+L+'</a>';}
- az.innerHTML=h;var l=document.querySelector("#grid .loadline");if(l)l.parentNode.removeChild(l);
- if(BOOTERR||!DB.rows.length){document.getElementById("grid").innerHTML='<div class="loadline" role="alert" style="grid-column:1/-1"><p>⚠ Chip designs could not load ('+esc((BOOTERR&&BOOTERR.message)||"index empty")+'). The counter above shows the last known total.</p><p><button class="toolbar" onclick="location.reload()">Retry</button></p></div>';document.getElementById("morebtn").style.display="none";return;}
- UI.more();},
-setFam:function(f){UI.filter=f||null;UI.shown=0;document.querySelectorAll("#famrow button").forEach(b=>b.classList.toggle("on",b.dataset.f===(f||"")));UI.render(true);},
-setLetter:function(l){UI.letter=l||null;UI.shown=0;document.querySelectorAll("#azrow a").forEach(a=>a.classList.toggle("on",a.dataset.l===(l||"")));UI.render(true);},
-rows:function(){return DB.rows.filter(r=>(!UI.filter||r[2]===UI.filter)&&(!UI.letter||r[1].toUpperCase().indexOf("SIGNATURE "+UI.letter)===0));},
-render:function(reset){const rs=UI.rows();if(reset){UI.shown=0;document.getElementById("grid").innerHTML="";}
- const g=document.getElementById("grid");const E=window.ChipEngine;
- const slice=rs.slice(UI.shown,UI.shown+48);UI.shown+=slice.length;
- g.insertAdjacentHTML("beforeend",slice.map(r=>'<div class="card" onclick="UI.open(\''+r[0]+'\')"><span class="recbadge mini">SIGNATURE ORIGINAL</span><span class="famtag">'+esc(E.FAMDEF[r[2]].label)+'</span><h3>'+esc(r[1])+'</h3><div class="meta">'+r[0]+' · '+r[3]+' era</div><div class="meta" title="Design CONCEPT · simulation NOT_SIMULATED · test NOT_TESTED · manufacturing NOT_MANUFACTURED" style="margin-top:3px"><span class="pill status" style="font-size:10px;padding:1px 8px;margin:0">CONCEPT · NOT_SIMULATED · NOT_TESTED · NOT_MANUFACTURED</span></div></div>').join(""));
- document.getElementById("morebtn").style.display=UI.shown>=rs.length?"none":"";
- const ls=document.getElementById("loadstat");if(ls)ls.textContent="Showing "+UI.shown.toLocaleString("en-US")+" of "+rs.length.toLocaleString("en-US")+" designs";},
-more:function(){UI.render(false);},
+/* ---------- featured spotlight + record helpers ---------- */
+var UI={
 /* GEMINI #20 FIX-1: featured design spotlight — full chip rendered on first paint */
 spotlight:async function(){
  const box=document.getElementById("spotlight");if(!box)return;
@@ -292,7 +272,6 @@ spotlight:async function(){
  }
 },
 random:async function(){try{if(!DB.rows.length){await loadIndex();}if(!DB.rows.length){alert("The design index is still loading — please wait a moment and tap again.");return;}const r=DB.rows[Math.floor(Math.random()*DB.rows.length)];location.search="?chip="+r[0];}catch(e){alert("Could not open a random design right now. Please check your connection and try again.");}},
-open:function(id){location.search="?chip="+id;}
 };
 /* ---------- chip detail ---------- */
 function modalOpenChip(v){var s=document.getElementById("scrim");if(s)s.style.display="block";v.classList.add("modal-open");document.body.style.overflow="hidden";}
@@ -562,7 +541,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
  try{await loadIndex();}catch(e){/* counter already shows manifest/cached/stale state — never a bare number */}
  const id=qp("chip");
  if(id&&/^JAH-CHIP-\d{6}$/.test(id)){await openChip(id);}
- else{try{await UI.spotlight();}catch(e){const b=document.getElementById("spotlight");if(b)b.style.display="none";}UI.init();}
+ else{try{await UI.spotlight();}catch(e){const b=document.getElementById("spotlight");if(b)b.style.display="none";}}
 });
 </script>
 <!-- first-visit WELCOME overlay (2026-10-04 standard: centered modal, no scroll, no spotlight) -->
@@ -572,7 +551,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
     <p class="wsub">Original Signature-line chip designs &mdash; every chip type ever made or projected, marching to 1,000,000. Here&rsquo;s how to use it:</p>
     <ol>
       <li><b>Find a chip.</b> Describe what you need in the Chip Finder in plain words &mdash; or type an exact design ID like JAH-CHIP-000123. It never invents designs.</li>
-      <li><b>Browse by family or letter.</b> The 16 family buttons (CPU, GPU, NPU, and more) and the A&ndash;Z row filter the design grid. Tap All to clear.</li>
+      <li><b>Browse by family or letter.</b> Open the <b>Browse</b> tab: the 16 family buttons (CPU, GPU, NPU, and more) and the A&ndash;Z row filter the design grid. Tap All to clear.</li>
       <li><b>Open a design.</b> Tap any card for the full spec table, the circuit-board drawing, block-by-block breakdown, and fabrication readiness. &ldquo;&#10003; Verify design&rdquo; re-checks the record&rsquo;s hash in your browser.</li>
       <li><b>Listen and save.</b> Read aloud speaks the spec; Copy and Download save it as .txt / .json. The Chip Helper on every record answers from that design&rsquo;s own spec sheet.</li>
     </ol>
@@ -589,9 +568,9 @@ window.addEventListener("DOMContentLoaded",async()=>{
       <button class="btn" id="jahGuideClose" type="button">&#10005; Close</button>
     </div>
     <div class="gfeat"><b>&#128269; Chip Finder</b><p><b>What:</b> the search box at the top. <b>Does:</b> matches your plain words against real archived designs, or opens an exact ID. <b>How:</b> type e.g. &ldquo;low power sensor chip for a wearable&rdquo;, or JAH-CHIP-000123. The finder searches the archive only &mdash; it never invents designs.</p></div>
-    <div class="gfeat"><b>&#9881; Families and A&ndash;Z</b><p><b>What:</b> the family filter row and the A&ndash;Z row. <b>Does:</b> filters the grid to one chip family (CPU, GPU, NPU, SoC, MCU, FPGA, memory, sensors, power, quantum, photonic, neuromorphic, DSP, modem, security, chiplet) or to names starting with a letter. <b>How:</b> tap a family or a letter; tap All to clear.</p></div>
+    <div class="gfeat"><b>&#9881; Families and A&ndash;Z</b><p><b>What:</b> the family filter row and the A&ndash;Z row on the <b>Browse</b> tab. <b>Does:</b> filters the grid to one chip family (CPU, GPU, NPU, SoC, MCU, FPGA, memory, sensors, power, quantum, photonic, neuromorphic, DSP, modem, security, chiplet) or to names starting with a letter. <b>How:</b> open the Browse tab, tap a family or a letter; tap All to clear.</p></div>
     <div class="gfeat"><b>&#9733; Featured design</b><p><b>What:</b> the gold-bordered spotlight box. <b>Does:</b> shows one real design &mdash; spec summary plus the circuit-board drawing &mdash; on every visit. <b>How:</b> &ldquo;Open the full spec &rarr;&rdquo; opens its record; &#127922; Surprise me opens a random design.</p></div>
-    <div class="gfeat"><b>&#128196; Design records</b><p><b>What:</b> the grid of design cards. <b>Does:</b> every card is one real design: full spec table (purpose, architecture, process node, transistors, die size, package, voltage, clock, power, interfaces), circuit-board drawing, block-by-block breakdown, fabrication readiness. Every record shows its honesty status: CONCEPT / NOT_SIMULATED / NOT_TESTED / NOT_MANUFACTURED. <b>How:</b> tap any card; &ldquo;Load more designs&rdquo; extends the grid.</p></div>
+    <div class="gfeat"><b>&#128196; Design records</b><p><b>What:</b> the grid of design cards on the <b>Browse</b> tab. <b>Does:</b> every card is one real design: full spec table (purpose, architecture, process node, transistors, die size, package, voltage, clock, power, interfaces), circuit-board drawing, block-by-block breakdown, fabrication readiness. Every record shows its honesty status: CONCEPT / NOT_SIMULATED / NOT_TESTED / NOT_MANUFACTURED. <b>How:</b> open the Browse tab, tap any card; &ldquo;Load more designs&rdquo; extends the grid.</p></div>
     <div class="gfeat"><b>&#10003; Verify design</b><p><b>What:</b> the verify button on every record. <b>Does:</b> recomputes the record&rsquo;s SHA-256 hash in your browser and compares it to the archive index. <b>How:</b> open any design, tap &ldquo;&#10003; Verify design&rdquo; &mdash; &#10003; MATCH means byte-identical to the shipped archive.</p></div>
     <div class="gfeat"><b>&#128266; Read aloud &middot; &#10697; Copy &middot; &#11015; Downloads</b><p><b>What:</b> the record toolbar. <b>Does:</b> Read aloud speaks the spec (floating bar: Stop / Pause / Resume); Copy spec copies the plain text; downloads save the full record as .txt / .json with statuses. <b>How:</b> the buttons on any open record.</p></div>
     <div class="gfeat"><b>RECORD panel</b><p><b>What:</b> the record action row. <b>Does:</b> &#8599; OPEN opens the record&rsquo;s own link; &#8646; SOURCE shows the design origin; # ID shows and copies the design ID; &#9881; VERSION shows engine and schema version; &#10548; SHARE shares the record link. <b>How:</b> tap the icons on any open record.</p></div>
