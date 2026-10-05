@@ -504,7 +504,7 @@ function chipGreet(c){var JT=chipTalk();if(JT){try{return JT.greet(chipProfile(c
 var QA={ask:function(){const inp=document.getElementById("qain");const q=inp.value.trim();if(!q)return;inp.value="";const c=window._chip;
  const log=document.getElementById("qalog");log.insertAdjacentHTML("beforeend",'<div class="q">You: '+esc(q)+'</div><div class="a">'+esc(QA.say(c,q))+'</div>');log.scrollTop=log.scrollHeight;},
 say:function(c,q){var prof=chipProfile(c),JT=chipTalk(),raw;
- if(JT&&chipIsSmallTalk(q)){raw=JT.reply(prof,q);}else{raw=QA.answerRaw(c,q);}
+ if(JT&&chipIsSmallTalk(q)){raw=JT.chatFor(prof,'ai:'+(prof.id||prof.name)).reply(q);}else{raw=QA.answerRaw(c,q);}
  return JT?JT.guard(raw,prof):raw;},
 answerRaw:function(c,q){q=q.toLowerCase();
  const has=(...ws)=>ws.some(w=>q.includes(w));
