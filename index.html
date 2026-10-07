@@ -187,6 +187,7 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 </nav>
 
 <main>
+<div id="home">
 <!-- GEMINI #20 FIX-1: featured design spotlight — a visitor sees a real chip design immediately -->
 <section id="spotlight" aria-label="Featured chip design"><div class="loadline"><span class="spin" role="img" aria-label="loading"></span><p>⚙ Loading featured design…</p></div></section>
 <div class="filterstack">
@@ -198,6 +199,7 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 </div>
 <p class="staticcount">35,601 original Signature chip designs archived as of 2026-10-05 — IDs JAH-CHIP-000001…JAH-CHIP-035601, 16 families. Full records render deterministically in-browser from design seeds. Statuses: design CONCEPT (design only), simulation NOT_SIMULATED, test NOT_TESTED, manufacturing NOT_MANUFACTURED. Machine-readable: chip-archive-manifest.json · api.json · schema/ · llms.txt · ai-manifest.json. <a href="methodology.html" style="color:var(--cyan)">Data &amp; methodology</a></p>
 <div style="text-align:center;margin:10px 4px 2px"><a href="browse.html" style="display:inline-block;background:var(--panel);border:2px solid var(--copper);color:var(--gold);border-radius:12px;padding:12px 26px;font-size:16px;font-weight:bold;text-decoration:none">&#128214; Browse the full A&ndash;Z chip archive &rarr;</a></div>
+</div>
 <div id="chipview" style="display:none"></div>
 </main>
 <div id="ttsbar"><span id="ttstext" style="color:var(--dim);font-size:12px"></span><br>
@@ -648,6 +650,8 @@ window.addEventListener('load',function(){ if(location.search.indexOf('=')>0) re
               document.querySelector('header') ||
               document.body;
   if (window.JAHProfile && JAHProfile.ui) JAHProfile.ui.renderButton(mount);
+})();
+</script>
 <script>
 (function () {
   /* Profiles v2 "Make it mine": page greeting near the header; renders ONLY when personalization is live */
